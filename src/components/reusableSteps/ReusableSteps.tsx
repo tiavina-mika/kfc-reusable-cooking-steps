@@ -70,7 +70,7 @@ type Props = {
   onRowBlur: () => void;
   hoveredRow: IHoveredRow;
   // genericSections?: Record<string, any>[];
-  // onClearFocus: () => void;
+  onClearFocus: () => void;
   onFieldFocus: () => void;
   onFieldBlur: any;
   onKeyUp: (event: any, setFieldTouched: any) => void;
@@ -87,6 +87,8 @@ type Props = {
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
   allSteps: Record<string, any>[];
+  formValues: Record<string, any>;
+  setValues: any;
   // computeStepsFormValues: (steps: Record<string, any>, sectionIndex: number) => void;
 };
 
@@ -97,7 +99,7 @@ const ReusableSteps: FC<Props> = ({
   onRowBlur,
   hoveredRow,
   // genericSections,
-  // onClearFocus,
+  onClearFocus,
   onFieldFocus,
   onFieldBlur,
   onKeyUp,
@@ -108,7 +110,9 @@ const ReusableSteps: FC<Props> = ({
   errors,
   machineTypes,
   kitchenAreas,
-  allSteps
+  allSteps,
+  formValues,
+  setValues
   // computeStepsFormValues
   // onDeleteBlur
 }) => {
@@ -162,6 +166,7 @@ const ReusableSteps: FC<Props> = ({
               <EditableReusableStep
                 steps={steps}
                 step={step}
+                formValues={formValues}
                 index={index}
                 isEdition={isEdition}
                 // index={index}
@@ -169,7 +174,7 @@ const ReusableSteps: FC<Props> = ({
                 // isDeleteHover={_isDeleteHover(index)}
                 // genericSections={genericSections}
                 setFieldValue={setFieldValue}
-                // onClearFocus={onClearFocus}
+                onClearFocus={onClearFocus}
                 onFieldFocus={onFieldFocus}
                 onFieldBlur={onFieldBlur}
                 onKeyUp={onKeyUp}
@@ -177,6 +182,8 @@ const ReusableSteps: FC<Props> = ({
                 hasError={_hasError}
                 machineTypes={machineTypes}
                 kitchenAreas={kitchenAreas}
+                allSteps={allSteps}
+                setValues={setValues}
               />
             ) : (
               <h1>Preview</h1>

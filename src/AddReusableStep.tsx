@@ -125,6 +125,7 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               return (
                 <ReusableSteps
                   steps={values?.productionSteps || []}
+                  formValues={values}
                   isEdition
                   setFieldValue={setFieldValue}
                   hoveredRow={hoveredRow}
@@ -137,6 +138,8 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
                   machineTypes={machineTypes}
                   kitchenAreas={kitchenAreas}
                   allSteps={steps}
+                  onClearFocus={onClearFocus}
+                  setValues={setValues}
                   // computeStepsFormValues={computeStepsFormValues}
                   // onKeyDown={(e) => _onKeyDown(e, section)}
                 />

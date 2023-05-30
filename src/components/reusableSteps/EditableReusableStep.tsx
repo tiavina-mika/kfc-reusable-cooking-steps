@@ -21,7 +21,9 @@ import {
   StyledStepFirstBodyColumn,
   StyledStepText,
   StyledProductionStepsTextarea,
-  StyledStickyLastBodyColumn
+  StyledStickyLastBodyColumn,
+  StyledAutocomplete,
+  StyledAutocompleteTextField
 } from "../productionSteps/StyledSectionComponents";
 import StepNameDescription from "../productionSteps/steps/StepNameDescription";
 import {
@@ -31,6 +33,7 @@ import {
 } from "../../utils/utils";
 import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
 import { getDefaultSteps, STEP_DURATION_UNITS } from "../../utils/recipeUtils";
+import { parseProductionStepsToObject } from "../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
@@ -115,7 +118,7 @@ type Props = {
   isHover: boolean;
   // isDeleteHover: boolean;
   // genericSections?: Record<string, any>[];
-  // onClearFocus: () => void;
+  onClearFocus: () => void;
   onFieldFocus: () => void;
   onFieldBlur: () => void;
   onKeyUp: (event: any, setFieldTouched: any) => void;
@@ -129,6 +132,10 @@ type Props = {
   // onDeleteBlur: () => void;
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
+  allSteps: Record<string, any>[];
+  formValues: Record<string, any>;
+  setValues: any;
+
   // computeStepsFormValues: (
   //   steps: Record<string, any>,
   // ) => void;
@@ -145,17 +152,33 @@ const EditableReusableStep: FC<Props> = ({
   isHover,
   // isDeleteHover,
   // genericSections,
-  // onClearFocus,
+  onClearFocus,
   onFieldFocus,
   onFieldBlur,
   onKeyUp,
   // onKeyDown
   hasError,
   machineTypes,
-  kitchenAreas
+  kitchenAreas,
+  allSteps,
+  formValues,
+  setValues,
+  setFieldValue
   // onDeleteBlur
 }) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
+
+  const getOptionLabel = (option) => {
+    if (typeof option === "string") {
+      return option;
+    }
+
+    if (option.get) {
+      return option.get("name") || option.get("description");
+    }
+
+    return option.name || option.description;
+  };
 
   // check if the selected value is the same as the option
   const isPointersOptionEqualToValue = (
@@ -164,6 +187,71 @@ const EditableReusableStep: FC<Props> = ({
   ): boolean => {
     if (!value) return false;
     return option.objectId === value.objectId;
+  };
+
+  const _onGenericSectionChange = (event, formValue, stepIndex, reason) => {
+    if (!event) return;
+
+    let value = formValue;
+    if (reason === "selectOption") {
+      if (value.get) {
+        value = value.get("name") || value.get("description");
+      } else {
+        value = value.name || value.description;
+      }
+    }
+
+    const step = allSteps.find(
+      (step) => (step.get ? step.get("name") : step.name) === value
+    );
+
+    const newSteps = [...steps];
+
+    newSteps[stepIndex].name = value;
+
+    if (reason === "selectOption" && step) {
+      const newSection =
+        parseProductionStepsToObject([step])[0] || getDefaultSteps();
+      newSteps[stepIndex] = newSection;
+
+      newSteps[stepIndex].error = false;
+      newSteps[stepIndex].id = null;
+      // newSteps[stepIndex].parentId = step.id;
+      newSteps[stepIndex].parentPercent = 100;
+
+      const newFormValues: Record<string, any> = { ...formValues };
+      newFormValues.productionSteps = newSteps;
+
+      // newSections[stepIndex].productionSteps.forEach((step, stepIndex) => {
+      //   step.stepComponents.forEach((_, ingredientIndex) => {
+      //     computeProductionStepsRecipeOnFieldChange(
+      //       newFormValues,
+      //       stepIndex,
+      //       stepIndex,
+      //       ingredientIndex
+      //     );
+      //   });
+      // });
+
+      setValues(newFormValues);
+    }
+
+    if (reason === "input-change" && steps) {
+      setFieldValue("productioinSteps", newSteps);
+    }
+
+    // if (section && !newSteps[stepIndex].parentId) {
+    //   newSteps[stepIndex].parentId = null;
+    //   newSteps[sectionIndex].parentPercent = 0;
+    // }
+
+    if (reason === "selectOption" && step) {
+      onClearFocus();
+    }
+
+    if (event.target) {
+      _stopPropagation(event);
+    }
   };
 
   const _addStep = (index: number, event = null) => {
@@ -227,7 +315,7 @@ const EditableReusableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  <Field
+                  {/* <Field
                     component={FormikTextFieldName}
                     name={`productionSteps[${index}].name`}
                     onClick={_stopPropagation}
@@ -235,6 +323,47 @@ const EditableReusableStep: FC<Props> = ({
                     onBlur={onFieldBlur}
                     onKeyUp={onKeyUp}
                     // onKeyDown={onKeyDown}
+                  /> */}
+                  <StyledAutocomplete
+                    freeSolo
+                    disableClearable
+                    selectOnFocus
+                    handleHomeEndKeys
+                    inputValue={
+                      typeof step.name === "string"
+                        ? step.name
+                        : step.get("name")
+                    }
+                    getOptionLabel={getOptionLabel}
+                    options={allSteps}
+                    onChange={(event, newInputValue, reason) => {
+                      _onGenericSectionChange(
+                        event,
+                        newInputValue,
+                        index,
+                        reason
+                      );
+                    }}
+                    onInputChange={(event, newInputValue) => {
+                      _onGenericSectionChange(
+                        event,
+                        newInputValue,
+                        index,
+                        "input-change"
+                      );
+                    }}
+                    renderInput={(params) => (
+                      <StyledAutocompleteTextField
+                        {...params}
+                        name={`productionSteps[${index}].name`}
+                        onClick={_stopPropagation}
+                        onFocus={onFieldFocus}
+                        onBlur={onFieldBlur}
+                        onKeyUp={onKeyUp as any}
+                        variant="standard"
+                        fullWidth
+                      />
+                    )}
                   />
                 </Stack>
                 <ErrorMessage

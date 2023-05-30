@@ -3,6 +3,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { red } from "@mui/material/colors";
 import {
+  Autocomplete,
   Box,
   BoxProps,
   InputBase,
@@ -218,3 +219,31 @@ export const StyledProductionStepsSelect = styled(
 )<StyledProductionStepsSelectProps & SelectProps>((props) => ({
   width: props.width
 }));
+
+export const StyledAutocomplete = styled(Autocomplete)({
+  "& .MuiAutocomplete-inputRoot": {
+    width: 512,
+    height: 30,
+    background: "#fff",
+    borderRadius: 4
+  }
+});
+
+export const StyledAutocompleteTextField = styled(TextField)({
+  "& .MuiAutocomplete-inputRoot.MuiInputBase-root": {
+    "&:before": {
+      borderBottom: "none",
+      "&:hover": {
+        borderBottom: "none"
+      }
+    },
+    "& .MuiAutocomplete-input": {
+      padding: 4
+    }
+  },
+  "& .MuiInput-input": {
+    fontWeight: 600,
+    fontSize: 14,
+    color: "#414141"
+  }
+});
