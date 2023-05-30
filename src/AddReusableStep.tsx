@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import ProductionStepsTable from "./components/productionSteps/ProductionStepsTable";
 
@@ -70,15 +70,14 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
     setFieldTouched(event.target.name);
   };
 
-  // const handleSubmit = () => {
-  //   if (!formRef.current) return;
-  //   (formRef.current as any).handleSubmit();
-  // };
+  const handleSubmit = () => {
+    if (!formRef.current) return;
+    (formRef.current as any).handleSubmit();
+  };
 
-  // const handleCancel = () => {
-  //   setInitialValues(defaultValues);
-  //   onCancel?.();
-  // };
+  const handleCancel = () => {
+    setInitialValues(defaultValues);
+  };
 
   const _onSubmit = (values) => {
     onSave(values);
@@ -86,7 +85,15 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
   };
 
   return (
-    <div>
+    <Box className="flexColumn">
+      <Box p={1.2} className="flexRow justifyEnd flexEnd flex1 stretchSelf">
+        <Stack direction="row" spacing={5}>
+          <Button onClick={handleCancel}>Annuler</Button>
+          <Button onClick={handleSubmit} variant="contained">
+            Enregistrer
+          </Button>
+        </Stack>
+      </Box>
       {/* table */}
       <ProductionStepsTable>
         {/* table head */}
@@ -135,7 +142,7 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
           </Formik>
         </Box>
       </ProductionStepsTable>
-    </div>
+    </Box>
   );
 };
 

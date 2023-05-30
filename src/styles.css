@@ -183,6 +183,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .errorColor {
   color: red;
 }
+.red {
+  background-color: red;
+}
+.green {
+  background-color: green;
+}
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;
