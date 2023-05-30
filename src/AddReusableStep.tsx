@@ -7,6 +7,9 @@ import ProductionStepsTable from "./components/productionSteps/ProductionStepsTa
 import ProductionStepsTableHead from "./components/productionSteps/ProductionStepsTableHead";
 import { getReusableFormInitialValues } from "./utils/recipeUtils";
 import { cloneDeep } from "lodash";
+import ReusableSteps from "./components/reusableSteps/ReusableSteps";
+import { machineTypes } from "./utils/data/machineTypes";
+import { kitchenAreas } from "./utils/data/kitchenAreas";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -35,13 +38,38 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
    */
   const [defaultValues, setDefaultValues] = useState(null);
   const [hoveredRow, setHoveredRow] = useState(null);
-  // const [fieldFocused, setFieldFocused] = useState<boolean>(false);
+  const [fieldFocused, setFieldFocused] = useState<boolean>(false);
 
   useEffect(() => {
     const formValues = getReusableFormInitialValues();
+    console.log("formValues", formValues)
     setInitialValues(formValues);
     setDefaultValues(cloneDeep(formValues));
   }, []);
+
+  const onRowBlur = () => {
+    if (fieldFocused) return;
+    setHoveredRow(null);
+  };
+
+  const onRowHover = (component, index) => {
+    if (fieldFocused) return;
+    setHoveredRow({ component, index });
+  };
+
+  const onClearFocus = () => setFieldFocused(false);
+
+  const onFieldFocus = () => setFieldFocused(true);
+
+  const onFieldBlur = (event, setFieldTouched) => {
+    setFieldFocused(false);
+    setFieldTouched(event.target.name);
+  };
+
+  const onKeyUp = (event, setFieldTouched) => {
+    if (!setFieldTouched) return;
+    setFieldTouched(event.target.name);
+  };
 
   // const handleSubmit = () => {
   //   if (!formRef.current) return;
@@ -86,7 +114,25 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               validateForm,
               setValues
             }) => {
-              return <h1>coool</h1>;
+              console.log('values 0', values)
+              return (
+                  <ReusableSteps
+                    steps={values?.steps || []}
+                    isEdition
+                    setFieldValue={setFieldValue}
+                    hoveredRow={hoveredRow}
+                    onFieldFocus={onFieldFocus}
+                    onFieldBlur={onFieldBlur}
+                    onKeyUp={onKeyUp}
+                    onRowHover={onRowHover}
+                    onRowBlur={onRowBlur}
+                    errors={errors}
+                    machineTypes={machineTypes}
+                    kitchenAreas={kitchenAreas}
+                    // computeStepsFormValues={computeStepsFormValues}
+                  // onKeyDown={(e) => _onKeyDown(e, section)}
+                />
+              );
             }}
           </Formik>
         </Box>

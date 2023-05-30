@@ -22,19 +22,18 @@ import {
   StyledStepText,
   StyledProductionStepsTextarea,
   StyledStickyLastBodyColumn
-} from "../StyledSectionComponents";
-import StepNameDescription from "./StepNameDescription";
+} from "../productionSteps/StyledSectionComponents";
+import StepNameDescription from "../productionSteps/steps/StepNameDescription";
 import {
   getTransformationTypeLabel,
   roundNumber,
   TRANSFORMATION_TYPES
-} from "../../../utils/utils";
-import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
+} from "../../utils/utils";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
 import {
-  computeStepData,
   getDefaultSteps,
   STEP_DURATION_UNITS
-} from "../../../utils/recipeUtils";
+} from "../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
@@ -124,7 +123,6 @@ type Props = {
   onFieldBlur: () => void;
   onKeyUp: (event: any, setFieldTouched: any) => void;
   // onKeyDown: (event: any) => void;
-  sectionIndex: number;
   setFieldValue: (
     field: string,
     value: any,
@@ -134,10 +132,9 @@ type Props = {
   // onDeleteBlur: () => void;
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
-  computeStepsFormValues: (
-    steps: Record<string, any>,
-    sectionIndex: number
-  ) => void;
+  // computeStepsFormValues: (
+  //   steps: Record<string, any>,
+  // ) => void;
 };
 
 const EditableReusableStep: FC<Props> = ({
@@ -145,7 +142,6 @@ const EditableReusableStep: FC<Props> = ({
   step,
   index,
   isEdition,
-  sectionIndex,
   // steps,
   // index,
   // for style
@@ -160,7 +156,6 @@ const EditableReusableStep: FC<Props> = ({
   hasError,
   machineTypes,
   kitchenAreas,
-  computeStepsFormValues
   // onDeleteBlur
 }) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
@@ -180,10 +175,10 @@ const EditableReusableStep: FC<Props> = ({
 
     // update production steps and step components data
     const newStep = newSteps[newSteps.length - 1];
-    if (newStep) {
-      computeStepData(newStep, "stepComponents");
-    }
-    // setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
+    // if (newStep) {
+    //   computeStepData(newStep, "stepComponents");
+    // }
+    // // setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
     _stopPropagation(event);
   };
 
@@ -237,7 +232,7 @@ const EditableReusableStep: FC<Props> = ({
                   <StyledStepText>{index + 1}.</StyledStepText>
                   <Field
                     component={FormikTextFieldName}
-                    name={`sections[${sectionIndex}].productionSteps[${index}].name`}
+                    name={`productionSteps[${index}].name`}
                     onClick={_stopPropagation}
                     onFocus={onFieldFocus}
                     onBlur={onFieldBlur}
@@ -246,7 +241,7 @@ const EditableReusableStep: FC<Props> = ({
                   />
                 </Stack>
                 <ErrorMessage
-                  name={`sections[${sectionIndex}].productionSteps[${index}].name`}
+                  name={`productionSteps[${index}].name`}
                   render={(message) => (
                     <StyledErrorMessage>{message}</StyledErrorMessage>
                   )}
@@ -259,7 +254,7 @@ const EditableReusableStep: FC<Props> = ({
                   </StyledStepDescriptionText> */}
                   <Field
                     component={FormikTextarea}
-                    name={`sections[${sectionIndex}].productionSteps[${index}].description`}
+                    name={`productionSteps[${index}].description`}
                     onClick={_stopPropagation}
                     onFocus={onFieldFocus}
                     onBlur={onFieldBlur}
@@ -268,7 +263,7 @@ const EditableReusableStep: FC<Props> = ({
                   />
                 </Stack>
                 <ErrorMessage
-                  name={`sections[${sectionIndex}].productionSteps[${index}].description`}
+                  name={`productionSteps[${index}].description`}
                   render={(message) => (
                     <StyledErrorMessage>{message}</StyledErrorMessage>
                   )}
