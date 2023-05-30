@@ -42,7 +42,6 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
 
   useEffect(() => {
     const formValues = getReusableFormInitialValues();
-    console.log("formValues", formValues)
     setInitialValues(formValues);
     setDefaultValues(cloneDeep(formValues));
   }, []);
@@ -114,22 +113,21 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               validateForm,
               setValues
             }) => {
-              console.log('values 0', values)
               return (
-                  <ReusableSteps
-                    steps={values?.steps || []}
-                    isEdition
-                    setFieldValue={setFieldValue}
-                    hoveredRow={hoveredRow}
-                    onFieldFocus={onFieldFocus}
-                    onFieldBlur={onFieldBlur}
-                    onKeyUp={onKeyUp}
-                    onRowHover={onRowHover}
-                    onRowBlur={onRowBlur}
-                    errors={errors}
-                    machineTypes={machineTypes}
-                    kitchenAreas={kitchenAreas}
-                    // computeStepsFormValues={computeStepsFormValues}
+                <ReusableSteps
+                  steps={values?.steps || []}
+                  isEdition
+                  setFieldValue={setFieldValue}
+                  hoveredRow={hoveredRow}
+                  onFieldFocus={onFieldFocus}
+                  onFieldBlur={onFieldBlur}
+                  onKeyUp={onKeyUp}
+                  onRowHover={onRowHover}
+                  onRowBlur={onRowBlur}
+                  errors={errors}
+                  machineTypes={machineTypes}
+                  kitchenAreas={kitchenAreas}
+                  // computeStepsFormValues={computeStepsFormValues}
                   // onKeyDown={(e) => _onKeyDown(e, section)}
                 />
               );
