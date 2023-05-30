@@ -30,3 +30,16 @@ export const RecipeProductionStepsSchema = Yup.object().shape({
     })
   )
 });
+
+export const ReusableProductionStep = Yup.object().shape({
+  productionSteps: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string(),
+      description: Yup.string().required("Obligatoire"),
+      machineSetting: Yup.string(),
+      transformation: Yup.string(),
+      stepDurationUnit: Yup.string(),
+      stepDuration: Yup.number()
+    })
+  )
+});
