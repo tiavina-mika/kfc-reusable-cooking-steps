@@ -122,7 +122,6 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               validateForm,
               setValues
             }) => {
-              console.log("values", values);
               return (
                 <ReusableSteps
                   steps={values?.productionSteps || []}
