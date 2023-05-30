@@ -1,0 +1,328 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  text-indent: 0;
+}
+
+html {
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  margin: 0;
+  font-weight: 400;
+}
+h2,
+h3 {
+  color: rgba(0, 0, 0, 0.870588);
+  font-weight: 400;
+  margin: 10px 0 14px;
+  font-size: 1.3em;
+}
+h3 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 1.2em;
+}
+input:-webkit-autofill {
+  /* removes the ugly yellow bg when autofilled */
+  box-shadow: 0 0 0 1000px white inset;
+}
+input[type="submit"] {
+  visibility: hidden;
+  position: absolute;
+  z-index: -1;
+  tab-index: -1;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.react-layout-components--box {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.highlightChip {
+  color: #0288d1; /* lightblue 700 */
+  font-weight: 500;
+}
+
+.mColor {
+  color: #388e3c;
+} /* green 700 */
+.pColor {
+  color: #0288d1;
+} /* lightblue 700 */
+.nColor {
+  color: #f57c00;
+} /* orange 700 */
+.mBgColor {
+  background-color: #388e3c;
+} /* green 700 */
+.pBgColor {
+  background-color: #0288d1;
+} /* lightblue 700 */
+.nBgColor {
+  background-color: #f57c00;
+} /* orange 700 */
+.mColorOnDark {
+  color: #c8e6c9;
+} /* green 100 */
+.pColorOnDark {
+  color: #b3e5fc;
+} /* lightblue 100 */
+.nColorOnDark {
+  color: #ffe0b2;
+} /* orange 100 */
+
+/*-------------------------------------------------------------------*/
+/*----------------------------- Reusable ----------------------------*/
+/*-------------------------------------------------------------------*/
+.rdFocused {
+  background-color: #fff9c4; /* yellow 100, same as pinMode */
+}
+
+.roboto {
+  font-family: "Roboto Slab";
+}
+
+.paper {
+  padding: 8px;
+}
+.card {
+  position: relative;
+  height: 100%;
+  padding: 8px;
+}
+
+.cardMargin {
+  margin-bottom: 10px;
+}
+
+/*----- Flex -------*/
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+.flexCenter {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+}
+.stretch {
+  align-items: stretch;
+}
+.center {
+  align-items: center;
+}
+.flexEnd {
+  align-items: flex-end;
+}
+.spaceBetween {
+  justify-content: space-between;
+}
+.spaceAround {
+  justify-content: space-around;
+}
+.justifyStart {
+  justify-content: flex-start;
+}
+.justifyEnd {
+  justify-content: flex-end;
+}
+.justifyCenter {
+  justify-content: center;
+}
+.stretchSelf {
+  align-self: stretch;
+}
+.flexStartSelf {
+  align-self: flex-start;
+}
+.flexEndSelf {
+  align-self: flex-end;
+}
+.flex1 {
+  flex: 1;
+}
+.wrap {
+  flex-wrap: wrap;
+}
+.noWrap {
+  flex-wrap: nowrap;
+}
+.shrink0 {
+  flex-shrink: 0;
+}
+.shrink1 {
+  flex-shrink: 1;
+}
+/*------------------*/
+
+.disabled {
+  color: #a0a0a0;
+}
+.errorColor {
+  color: red;
+}
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.gridBorder {
+  border-right: 1px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
+}
+.minHeight300 {
+  min-height: 300px;
+}
+.width100 {
+  width: 100%;
+}
+.height100 {
+  height: 100%;
+}
+.pointer {
+  cursor: pointer;
+}
+.overflowHidden {
+  overflow: hidden;
+}
+.overflowAuto {
+  overflow: auto;
+}
+.positionRelative {
+  position: relative;
+}
+.overParent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.floatLeft {
+  float: left;
+}
+.hidden {
+  opacity: 0;
+}
+.hiddenSize {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.showFlex {
+  display: flex;
+}
+.showBlock {
+  display: block;
+}
+.visible {
+  opacity: 1;
+}
+.transition300ms {
+  transition: all 300ms ease-in-out;
+}
+.marginRight8 {
+  margin-right: 8px;
+}
+.marginRight16 {
+  margin-right: 16px;
+}
+.marginRight24 {
+  margin-right: 24px;
+}
+.marginBottom20 {
+  margin-bottom: 20px;
+}
+.marginLeft10 {
+  margin-left: 10px;
+}
+.marginLeft30 {
+  margin-left: 30px;
+}
+.marginTop10 {
+  margin-top: 10px;
+}
+.paddingLeft20 {
+  padding-left: 20px;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.grey600 {
+  color: #757575;
+}
+.grey50 {
+  color: #fafafa;
+}
+body .largeFormLabel {
+  font-size: 18px;
+}
+
+.modified {
+  border-bottom: 2px solid #00bcd4 !important;
+}
+
+/*DRAG AND DROP HANDLE */
+.grippy {
+  content: "......";
+  width: 10px;
+  height: 30px;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 5px;
+  padding: 3px 4px;
+  cursor: move;
+  vertical-align: middle;
+  margin-top: 10px;
+  margin-right: 3px;
+  font-size: 12px;
+  font-family: sans-serif;
+  letter-spacing: 2px;
+  color: #cccccc;
+  text-shadow: 1px 0 1px black;
+}
+.grippy.ingredient {
+  margin-top: 25px;
+}
+.grippy::after {
+  content: ".. .. .. .. ..";
+}
+.brandLogo {
+  width: 27px;
+  height: 27px;
+  margin-right: 2px;
+}
+.brandLogoContainer {
+  display: flex;
+  width: 50px;
+  height: 25px;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.headerHeight {
+  height: 64px !important;
+}

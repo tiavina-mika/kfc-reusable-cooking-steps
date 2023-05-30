@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "5.11.11",
+    "@mui/material": "latest",
+    "@mui/styles": "5.11.13",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "formik": "2.2.9",
+    "lodash": "4.17.21",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest",
+    "uuid": "9.0.0",
+    "yup": "1.0.2"
+  },
+  "description": "https://github.com/mui/material-ui/blob/v5.10.17/docs/data/material/components/tables/BasicTable.tsx",
+  "devDependencies": {
+    "react-scripts": "latest"
+  },
+  "main": "index.tsx",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "name": "6dyurr",
+  "version": "0.0.0"
+}
