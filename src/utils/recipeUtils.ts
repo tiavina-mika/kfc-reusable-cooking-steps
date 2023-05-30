@@ -632,7 +632,7 @@ export const getRecipeSectionsFormInitialValues = (
 
 export const getReusableFormInitialValues = () => {
   const values: Record<string, any> = {
-    steps: [getDefaultSteps()]
+    productionSteps: [getDefaultSteps()]
   };
 
   return values;

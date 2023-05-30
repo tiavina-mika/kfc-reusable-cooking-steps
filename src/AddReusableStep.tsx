@@ -10,6 +10,8 @@ import { cloneDeep } from "lodash";
 import ReusableSteps from "./components/reusableSteps/ReusableSteps";
 import { machineTypes } from "./utils/data/machineTypes";
 import { kitchenAreas } from "./utils/data/kitchenAreas";
+import { steps } from "./utils/data/step";
+import { ReusableProductionStepSchema } from "./utils/validators";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -105,7 +107,7 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
           <Formik
             innerRef={formRef}
             initialValues={initialValues}
-            // validationSchema={RecipeProductionStepsSchema}
+            validationSchema={ReusableProductionStepSchema}
             onSubmit={_onSubmit}
             validateOnChange={false}
             enableReinitialize
@@ -120,20 +122,22 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               validateForm,
               setValues
             }) => {
+              console.log("values", values);
               return (
                 <ReusableSteps
-                  steps={values?.steps || []}
+                  steps={values?.productionSteps || []}
                   isEdition
                   setFieldValue={setFieldValue}
                   hoveredRow={hoveredRow}
                   onFieldFocus={onFieldFocus}
-                  onFieldBlur={onFieldBlur}
-                  onKeyUp={onKeyUp}
+                  onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
+                  onKeyUp={(e) => onKeyUp(e, setFieldTouched)}
                   onRowHover={onRowHover}
                   onRowBlur={onRowBlur}
                   errors={errors}
                   machineTypes={machineTypes}
                   kitchenAreas={kitchenAreas}
+                  allSteps={steps}
                   // computeStepsFormValues={computeStepsFormValues}
                   // onKeyDown={(e) => _onKeyDown(e, section)}
                 />

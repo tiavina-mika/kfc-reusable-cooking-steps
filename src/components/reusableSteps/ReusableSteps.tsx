@@ -86,6 +86,7 @@ type Props = {
   // onDeleteBlur: () => void;
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
+  allSteps: Record<string, any>[];
   // computeStepsFormValues: (steps: Record<string, any>, sectionIndex: number) => void;
 };
 
@@ -106,7 +107,8 @@ const ReusableSteps: FC<Props> = ({
   setFieldValue,
   errors,
   machineTypes,
-  kitchenAreas
+  kitchenAreas,
+  allSteps
   // computeStepsFormValues
   // onDeleteBlur
 }) => {
