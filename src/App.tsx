@@ -1,10 +1,8 @@
-import Recipe from "./Recipe";
-import { recipe } from "./utils/data/recipe";
-import { sections } from "./utils/data/section";
-
+import ReusableSteps from "./ReusableSteps";
 
 const App = () => {
-  return <Recipe recipe={recipe} genericSections={sections} />;
+  // return <Recipe recipe={recipe} genericSections={sections} />;
+  return <ReusableSteps />;
 };
 
 export default App;
