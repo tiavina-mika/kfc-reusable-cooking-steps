@@ -7,11 +7,11 @@ import { cloneDeep } from "lodash";
 import ProductionStepsTableHead from "./ProductionStepsTableHead";
 import Sections from "./sections/Sections";
 import ProductionStepsTable from "./ProductionStepsTable";
-import { getRecipeSectionsFormInitialValues } from "../utils/recipeUtils";
-import { RecipeProductionStepsSchema } from "../utils/validators";
+import { getRecipeSectionsFormInitialValues } from "../../utils/recipeUtils";
+import { RecipeProductionStepsSchema } from "../../utils/validators";
 import ProductionStepsContainer from "./ProductionStepsContainer";
-import { machineTypes } from "../utils/data/machineTypes";
-import { kitchenAreas } from "../utils/data/kitchenAreas";
+import { machineTypes } from "../../utils/data/machineTypes";
+import { kitchenAreas } from "../../utils/data/kitchenAreas";
 
 const headers = [
   { label: "Section / Étape / Article" },

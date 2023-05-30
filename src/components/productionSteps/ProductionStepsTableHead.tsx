@@ -3,12 +3,12 @@ import Typography from "@mui/material/Typography";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 
-import { getCellAlignment } from "../utils/utils";
+import { getCellAlignment } from "../../utils/utils";
 import {
   PRODUCTION_STEPS_COL_WIDTHS,
   PRODUCTION_STEPS_SPACINGS
   // PRODUCTION_STEPS_FIST_COL_PL
-} from "../utils/constant";
+} from "../../utils/constant";
 import { lastColStickyStyle } from "./StyledSectionComponents";
 
 // ----------------------------------------------- //

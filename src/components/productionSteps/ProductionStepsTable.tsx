@@ -4,7 +4,7 @@ import { grey } from "@mui/material/colors";
 import { Box, SxProps } from "@mui/material";
 import { sum } from "lodash";
 
-import { PRODUCTION_STEPS_COL_WIDTHS } from "../utils/constant";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
 import { Theme } from "@emotion/react";
 
 const TABLE_WIDTH = sum(PRODUCTION_STEPS_COL_WIDTHS);

@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 
-import ProductionSteps from "./components/ProductionSteps";
+import ProductionSteps from "./components/productionSteps/ProductionSteps";
 
 type Props = {
   recipe: Record<string, any>;

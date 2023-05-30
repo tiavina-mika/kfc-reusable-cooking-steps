@@ -2,8 +2,8 @@ import React, { FC, ReactNode } from "react";
 import { Box } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
-import { COLORS } from "../utils/constant";
-import PageHeader from "./headers/PageHeader";
+import { COLORS } from "../../utils/constant";
+import PageHeader from "../headers/PageHeader";
 
 type Props = {
   children: ReactNode;

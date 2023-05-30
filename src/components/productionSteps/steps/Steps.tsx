@@ -9,7 +9,7 @@ import {
   Box
 } from "@mui/material";
 
-import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../utils/constant";
+import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
 import { IHoveredRow } from "../sections/Sections";

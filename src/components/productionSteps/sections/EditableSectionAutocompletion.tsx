@@ -1,21 +1,21 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useState } from "react";
 
 import styled from "@emotion/styled";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, Stack, TextField } from "@mui/material";
 import { ErrorMessage, FormikErrors } from "formik";
 
-import { getCellAlignment, roundNumber } from "../../utils/utils";
-import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
+import {
+  StyledErrorMessage,
+  StyledSectionFirstBodyColumn
+} from "../StyledSectionComponents";
+import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
+import { getCellAlignment, roundNumber } from "../../../utils/utils";
 import {
   computeProductionStepsRecipeOnFieldChange,
   computeSectionData,
   getDefaultSection,
   parseSectionToObject
-} from "../../utils/recipeUtils";
-import {
-  StyledErrorMessage,
-  StyledSectionFirstBodyColumn
-} from "../StyledSectionComponents";
+} from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 export const COMPONENT_NAME = "SECTIONS";
@@ -76,29 +76,25 @@ const StyledText = styled(Box, {
   return defaultStyles;
 });
 
-// const StyledAutocomplete = styled(Autocomplete)({
-//   "& .MuiAutocomplete-inputRoot": {
-//     width: 512,
-//     height: 30,
-//     background: "#fff",
-//     borderRadius: 4
-//   }
-// });
+const StyledAutocomplete = styled(Autocomplete)({
+  "& .MuiAutocomplete-inputRoot": {
+    width: 512,
+    height: 30,
+    background: "#fff",
+    borderRadius: 4
+  }
+});
 
-const StyledTextField = styled(TextField)({
-  width: 512,
-  height: 30,
-  background: "#fff",
-  borderRadius: 4,
-  "& .MuiInputBase-root": {
-    "&:before, :after": {
+const StyledAutocompleteTextField = styled(TextField)({
+  "& .MuiAutocomplete-inputRoot.MuiInputBase-root": {
+    "&:before": {
       borderBottom: "none",
       "&:hover": {
         borderBottom: "none"
       }
     },
-    "& .MuiInputBase-input": {
-      paddingLeft: 7
+    "& .MuiAutocomplete-input": {
+      padding: 4
     }
   },
   "& .MuiInput-input": {
@@ -127,6 +123,7 @@ type Props = {
   hasError: (index: number) => boolean;
   onDeleteBlur: () => void;
   formValues: Record<string, any>;
+  setValues: any;
 };
 
 const EditableSection: FC<Props> = ({
@@ -144,9 +141,10 @@ const EditableSection: FC<Props> = ({
   onKeyUp,
   hasError,
   onDeleteBlur,
-  formValues
+  formValues,
+  setValues
 }) => {
-  const [changed, setChanged] = useState<number>(0);
+  const [changed, setChanged] = useState(0);
 
   const _stopPropagation = (event) => event && event.stopPropagation();
 
@@ -180,18 +178,21 @@ const EditableSection: FC<Props> = ({
       newSections[sectionIndex].parentId = section.id;
       newSections[sectionIndex].parentPercent = 100;
 
-      formValues.sections = newSections;
+      const newFormValues = { ...formValues };
+      newFormValues.sections = newSections;
 
       newSections[sectionIndex].productionSteps.forEach((step, stepIndex) => {
-        step.stepComponents.forEach((ingredient, ingredientIndex) => {
+        step.stepComponents.forEach((_, ingredientIndex) => {
           computeProductionStepsRecipeOnFieldChange(
-            formValues,
+            newFormValues,
             sectionIndex,
             stepIndex,
             ingredientIndex
           );
         });
       });
+
+      setValues(newFormValues);
     }
 
     if (reason === "input-change" && section) {
@@ -228,6 +229,18 @@ const EditableSection: FC<Props> = ({
     _stopPropagation(event);
   };
 
+  const getOptionLabel = (option) => {
+    if (typeof option === "string") {
+      return option;
+    }
+
+    if (option.get) {
+      return option.get("name");
+    }
+
+    return option.name;
+  };
+
   return (
     <Box
       sx={{
@@ -239,13 +252,12 @@ const EditableSection: FC<Props> = ({
       <StyledSectionFirstBodyColumn className="flexRow center">
         {isHover ? (
           <>
-            {/* add button */}
             <Button
               onClick={(e) => _addSection(index, e)}
               className="flexCenter"
               sx={{ position: "absolute", left: -8 }}
             >
-              {/* need to use directly the svg element because of an error in codesandbox importation */}
+              {/* for unkown reason, codesandbox can not import it with img element */}
               <svg
                 width="14"
                 height="14"
@@ -259,29 +271,42 @@ const EditableSection: FC<Props> = ({
                 />
               </svg>
             </Button>
-            {/* input */}
             <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
-              <StyledTextField
-                name={`sections[${index}].name`}
-                value={
+              <StyledAutocomplete
+                freeSolo
+                disableClearable
+                selectOnFocus
+                handleHomeEndKeys
+                inputValue={
                   typeof section.name === "string"
                     ? section.name
-                    : section.name.get("name")
+                    : section.get("name")
                 }
-                onClick={_stopPropagation}
-                onFocus={onFieldFocus}
-                onBlur={onFieldBlur}
-                onKeyUp={onKeyUp as any}
-                variant="standard"
-                fullWidth
-                onChange={(event) => {
+                getOptionLabel={getOptionLabel}
+                options={genericSections}
+                onChange={(event, newInputValue, reason) => {
+                  _onGenericSectionChange(event, newInputValue, index, reason);
+                }}
+                onInputChange={(event, newInputValue) => {
                   _onGenericSectionChange(
                     event,
-                    event.target.value,
+                    newInputValue,
                     index,
                     "input-change"
                   );
                 }}
+                renderInput={(params) => (
+                  <StyledAutocompleteTextField
+                    {...params}
+                    name={`sections[${index}].name`}
+                    onClick={_stopPropagation}
+                    onFocus={onFieldFocus}
+                    onBlur={onFieldBlur}
+                    onKeyUp={onKeyUp as any}
+                    variant="standard"
+                    fullWidth
+                  />
+                )}
               />
               <ErrorMessage
                 name={`sections[${index}].name`}

@@ -16,8 +16,8 @@ import {
   COLORS,
   PRODUCTION_STEPS_COL_WIDTHS,
   PRODUCTION_STEPS_SPACINGS
-} from "../utils/constant";
-import { getCellAlignment } from "../utils/utils";
+} from "../../utils/constant";
+import { getCellAlignment } from "../../utils/utils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 

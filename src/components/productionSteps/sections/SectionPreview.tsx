@@ -3,8 +3,8 @@ import React, { FC } from "react";
 import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 
-import { roundNumber } from "../../utils/utils";
-import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
+import { roundNumber } from "../../../utils/utils";
+import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   StyledSectionFirstBodyColumn,
   StyledStepBodyCell

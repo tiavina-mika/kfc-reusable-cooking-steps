@@ -4,13 +4,13 @@ import styled from "@emotion/styled";
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import { ErrorMessage, FormikErrors } from "formik";
 
-import { roundNumber } from "../../utils/utils";
-import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
+import { roundNumber } from "../../../utils/utils";
+import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   computeSectionData,
   getDefaultSection,
   parseSectionToObject
-} from "../../utils/recipeUtils";
+} from "../../../utils/recipeUtils";
 import {
   StyledErrorMessage,
   StyledStickyLastBodyColumn,

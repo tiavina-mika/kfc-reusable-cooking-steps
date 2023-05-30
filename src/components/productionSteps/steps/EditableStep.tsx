@@ -28,13 +28,13 @@ import {
   getTransformationTypeLabel,
   roundNumber,
   TRANSFORMATION_TYPES
-} from "../../utils/utils";
-import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
+} from "../../../utils/utils";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   computeStepData,
   getDefaultSteps,
   STEP_DURATION_UNITS
-} from "../../utils/recipeUtils";
+} from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 

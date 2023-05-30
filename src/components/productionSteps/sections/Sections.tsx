@@ -10,11 +10,11 @@ import {
   Box
 } from "@mui/material";
 
-import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../utils/constant";
+import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import SectionPreview from "./SectionPreview";
 import EditableSection from "./EditableSection";
 import Steps from "../steps/Steps";
-import { computeProductionStepsRecipeOnFieldChange } from "../../utils/recipeUtils";
+import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
 
 export const COMPONENT_NAME = "SECTIONS";
 

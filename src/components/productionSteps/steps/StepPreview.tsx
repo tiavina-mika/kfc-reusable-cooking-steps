@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
-import { roundNumber, getTransformationTypeLabel } from "../../utils/utils";
-import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
+import { roundNumber, getTransformationTypeLabel } from "../../../utils/utils";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   StyledStepBodyCell,
   StyledStepFirstBodyColumn,
