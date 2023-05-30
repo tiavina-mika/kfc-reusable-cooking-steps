@@ -1,8 +1,8 @@
-import ReusableSteps from "./ReusableSteps";
+import AddReusableStep from "./AddReusableStep";
 
 const App = () => {
   // return <Recipe recipe={recipe} genericSections={sections} />;
-  return <ReusableSteps />;
+  return <AddReusableStep />;
 };
 
 export default App;

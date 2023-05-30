@@ -1,10 +1,12 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 import { Formik } from "formik";
 import ProductionStepsTable from "./components/productionSteps/ProductionStepsTable";
 
 import ProductionStepsTableHead from "./components/productionSteps/ProductionStepsTableHead";
+import { getReusableFormInitialValues } from "./utils/recipeUtils";
+import { cloneDeep } from "lodash";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -24,22 +26,22 @@ const headers = [
 type Props = {
   onSave?: (values: Record<string, any>) => void;
 };
-const ReusableSteps: FC<Props> = ({ onSave }) => {
+const AddReusableStep: FC<Props> = ({ onSave }) => {
   const formRef = useRef();
   const [initialValues, setInitialValues] = useState(null);
   /*
    * this will not be changed,
    * unlike the initial values that changed every input of the form change
    */
-  // const [defaultValues, setDefaultValues] = useState(null);
+  const [defaultValues, setDefaultValues] = useState(null);
   const [hoveredRow, setHoveredRow] = useState(null);
   // const [fieldFocused, setFieldFocused] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   const formValues = getRecipeSectionsFormInitialValues(recipe, true);
-  //   setInitialValues(formValues);
-  //   setDefaultValues(cloneDeep(formValues));
-  // }, [recipe]);
+  useEffect(() => {
+    const formValues = getReusableFormInitialValues();
+    setInitialValues(formValues);
+    setDefaultValues(cloneDeep(formValues));
+  }, []);
 
   // const handleSubmit = () => {
   //   if (!formRef.current) return;
@@ -93,4 +95,4 @@ const ReusableSteps: FC<Props> = ({ onSave }) => {
   );
 };
 
-export default ReusableSteps;
+export default AddReusableStep;

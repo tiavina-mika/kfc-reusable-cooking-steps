@@ -630,6 +630,14 @@ export const getRecipeSectionsFormInitialValues = (
   return values;
 };
 
+export const getReusableFormInitialValues = () => {
+  const values: Record<string, any> = {
+    steps: [getDefaultSteps()]
+  };
+
+  return values;
+};
+
 /**
  * Here we assume that a computed data can change only if numbered values changes in an ingredient.
  * If ingredientIndex is null, it means it's a new or a removed ingredient
