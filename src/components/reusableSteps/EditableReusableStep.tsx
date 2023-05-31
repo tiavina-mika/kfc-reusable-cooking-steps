@@ -260,25 +260,28 @@ const EditableReusableStep: FC<Props> = ({
     newSteps.splice(index + 1, 0, getDefaultSteps());
 
     // update production steps and step components data
-    const newStep = newSteps[newSteps.length - 1];
+    // const newStep = newSteps[newSteps.length - 1];
     // if (newStep) {
     //   computeStepData(newStep, "stepComponents");
     // }
-    // // setFieldValue(`productionSteps`, newSteps);
+    setFieldValue(`productionSteps`, newSteps);
     _stopPropagation(event);
   };
 
-  // const _removeStep = (index, event = null) => {
-  //   const newSteps = [...steps];
-  //   newSteps.splice(index, 1);
-  //   if (!newSteps.length) {
-  //     newSteps.splice(0, 0, getDefaultSteps());
-  //   }
+  const _removeStep = (index, event = null) => {
+    const newSteps = [...steps];
+    newSteps.splice(index, 1);
+    if (!newSteps.length) {
+      newSteps.splice(0, 0, getDefaultSteps());
+    }
 
-  //   computeStepsFormValues(newSteps, sectionIndex);
+    setFieldValue("name", steps[steps.length - 1]?.name);
+    setFieldValue("productionSteps", newSteps);
 
-  //   _stopPropagation(event);
-  // };
+    // computeStepsFormValues(newSteps, sectionIndex);
+
+    _stopPropagation(event);
+  };
 
   return (
     <Box
@@ -620,7 +623,7 @@ const EditableReusableStep: FC<Props> = ({
       <StyledStickyLastBodyColumn type="step" addBackground={isHover}>
         {isHover && (
           <IconButton
-            // onClick={(e) => _removeStep(index, e)}
+            onClick={(e) => _removeStep(index, e)}
             className="flexCenter"
             disableRipple
           >
