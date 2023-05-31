@@ -13,6 +13,7 @@ import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../utils/constant";
 // import StepPreview from "./StepPreview";
 import EditableReusableStep from "./EditableReusableStep";
 import { IHoveredRow } from "../productionSteps/sections/Sections";
+import { StyledStepAccordionSummary } from "../productionSteps/StyledSectionComponents";
 
 export const COMPONENT_NAME = "STEPS";
 
@@ -33,34 +34,34 @@ const StyledAccordion = styled((props: AccordionProps) => (
   }
 });
 
-type StyledAccordionSummaryProps = {
-  expandedIconLeftStep?: number;
-};
-const StyledAccordionSummary = styled(
-  (props: AccordionSummaryProps) => <AccordionSummary {...props} />,
-  {
-    shouldForwardProp: (prop) => prop !== "expandedIconLeftStep"
-  }
-)<StyledAccordionSummaryProps>(({ expandedIconLeftStep = 0 }) => ({
-  flexDirection: "row-reverse",
-  position: "relative",
-  // opened and closed expanded icon
-  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded,& .MuiAccordionSummary-expandIconWrapper": {
-    position: "sticky",
-    left:
-      PRODUCTION_STEPS_SPACINGS.ACCORDION_EXPANDED_ICON_LEFT +
-      PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL_DIFF +
-      expandedIconLeftStep
-  },
-  // row
-  "& .MuiAccordionSummary-content": {
-    padding: 0,
-    margin: 0,
-    borderBottom: "1px solid #cccccc",
-    marginLeft: -28, // important! for the summary to not take account of the expand icon space
-    backgroundColor: COLORS.PRODUCTION_STEPS_GREY
-  }
-}));
+// type StyledAccordionSummaryProps = {
+//   expandedIconLeftStep?: number;
+// };
+// const StyledAccordionSummary = styled(
+//   (props: AccordionSummaryProps) => <AccordionSummary {...props} />,
+//   {
+//     shouldForwardProp: (prop) => prop !== "expandedIconLeftStep"
+//   }
+// )<StyledAccordionSummaryProps>(({ expandedIconLeftStep = 0 }) => ({
+//   flexDirection: "row-reverse",
+//   position: "relative",
+//   // opened and closed expanded icon
+//   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded,& .MuiAccordionSummary-expandIconWrapper": {
+//     position: "sticky",
+//     left:
+//       PRODUCTION_STEPS_SPACINGS.ACCORDION_EXPANDED_ICON_LEFT +
+//       PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL_DIFF +
+//       expandedIconLeftStep
+//   },
+//   // row
+//   "& .MuiAccordionSummary-content": {
+//     padding: 0,
+//     margin: 0,
+//     borderBottom: "1px solid #cccccc",
+//     marginLeft: -28, // important! for the summary to not take account of the expand icon space
+//     backgroundColor: COLORS.PRODUCTION_STEPS_GREY
+//   }
+// }));
 
 const StyledLeftBar = styled("div")({
   width: 8,
@@ -167,7 +168,7 @@ const ReusableSteps: FC<Props> = ({
           disableGutters
           key={index}
         >
-          <StyledAccordionSummary
+          <StyledStepAccordionSummary
             expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
             onMouseEnter={() => onRowHover(COMPONENT_NAME, index)}
             onMouseLeave={onRowBlur}
@@ -198,7 +199,7 @@ const ReusableSteps: FC<Props> = ({
             ) : (
               <h1>Preview</h1>
             )}
-          </StyledAccordionSummary>
+          </StyledStepAccordionSummary>
         </StyledAccordion>
       ))}
     </Box>

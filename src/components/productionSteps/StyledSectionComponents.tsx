@@ -3,6 +3,8 @@ import React from "react";
 import styled from "@emotion/styled";
 import { red } from "@mui/material/colors";
 import {
+  AccordionSummary,
+  AccordionSummaryProps,
   Autocomplete,
   Box,
   BoxProps,
@@ -250,3 +252,32 @@ export const StyledAutocompleteTextField = styled(TextField)({
     color: "#414141"
   }
 });
+
+type StyledStepAccordionSummaryProps = {
+  expandedIconLeftStep?: number;
+};
+export const StyledStepAccordionSummary = styled(
+  (props: AccordionSummaryProps) => <AccordionSummary {...props} />,
+  {
+    shouldForwardProp: (prop) => prop !== "expandedIconLeftStep"
+  }
+)<StyledStepAccordionSummaryProps>(({ expandedIconLeftStep = 0 }) => ({
+  flexDirection: "row-reverse",
+  position: "relative",
+  // opened and closed expanded icon
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded,& .MuiAccordionSummary-expandIconWrapper": {
+    position: "sticky",
+    left:
+      PRODUCTION_STEPS_SPACINGS.ACCORDION_EXPANDED_ICON_LEFT +
+      PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL_DIFF +
+      expandedIconLeftStep
+  },
+  // row
+  "& .MuiAccordionSummary-content": {
+    padding: 0,
+    margin: 0,
+    borderBottom: "1px solid #cccccc",
+    marginLeft: -28, // important! for the summary to not take account of the expand icon space
+    backgroundColor: COLORS.PRODUCTION_STEPS_GREY
+  }
+}));
