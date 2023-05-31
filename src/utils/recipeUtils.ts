@@ -632,7 +632,8 @@ export const getRecipeSectionsFormInitialValues = (
 
 export const getReusableFormInitialValues = () => {
   const values: Record<string, any> = {
-    productionSteps: [getDefaultSteps()]
+    productionSteps: [getDefaultSteps()],
+    name: "cool"
   };
 
   return values;

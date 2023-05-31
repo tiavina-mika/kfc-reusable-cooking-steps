@@ -12,8 +12,7 @@ import {
 import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../utils/constant";
 // import StepPreview from "./StepPreview";
 import EditableReusableStep from "./EditableReusableStep";
-import { IHoveredRow } from "../sections/Sections";
-import { FormikErrors } from "formik";
+import { IHoveredRow } from "../productionSteps/sections/Sections";
 
 export const COMPONENT_NAME = "STEPS";
 
@@ -66,7 +65,7 @@ const StyledAccordionSummary = styled(
 type Props = {
   steps: Record<string, any>[];
   isEdition: boolean;
-  onRowHover: (component: string, index: number) => void;
+  onRowHover: (component: string, index?: number) => void;
   onRowBlur: () => void;
   hoveredRow: IHoveredRow;
   // genericSections?: Record<string, any>[];

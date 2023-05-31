@@ -141,21 +141,24 @@ export const StyledStickyLastBodyColumn = styled(
 // --------------------------------------- //
 type StyledStepFirstBodyColumnProps = {
   leftStep?: number;
+  bgcolor?: string;
 };
 export const StyledStepFirstBodyColumn = styled(
   (props: BoxProps) => <Box {...props} sx={{ ...stickyStyle }} />,
   {
-    shouldForwardProp: (prop) => prop !== "leftStep"
+    shouldForwardProp: (prop) => prop !== "leftStep" && prop !== "bgcolor"
   }
-)<StyledStepFirstBodyColumnProps>(({ leftStep = 0 }) => ({
-  paddingLeft: PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL + leftStep,
-  paddingRight: 8,
-  backgroundColor: COLORS.PRODUCTION_STEPS_GREY,
-  width: widths[0],
-  paddingTop: 16,
-  paddingBottom: 17,
-  zIndex: 1000
-}));
+)<StyledStepFirstBodyColumnProps>(
+  ({ bgcolor = COLORS.PRODUCTION_STEPS_GREY, leftStep = 0 }) => ({
+    paddingLeft: PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL + leftStep,
+    paddingRight: 8,
+    backgroundColor: bgcolor,
+    width: widths[0],
+    paddingTop: 16,
+    paddingBottom: 17,
+    zIndex: 1000
+  })
+);
 
 type StyledTextProps = {
   disabled?: boolean;

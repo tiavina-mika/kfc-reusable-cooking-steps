@@ -12,6 +12,7 @@ import { machineTypes } from "./utils/data/machineTypes";
 import { kitchenAreas } from "./utils/data/kitchenAreas";
 import { steps } from "./utils/data/step";
 import { ReusableProductionStepSchema } from "./utils/validators";
+import ReusableStepParent from "./components/reusableSteps/ReusableStepParent";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -123,26 +124,34 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
               setValues
             }) => {
               return (
-                <ReusableSteps
-                  steps={values?.productionSteps || []}
-                  formValues={values}
-                  isEdition
-                  setFieldValue={setFieldValue}
-                  hoveredRow={hoveredRow}
-                  onFieldFocus={onFieldFocus}
-                  onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
-                  onKeyUp={(e) => onKeyUp(e, setFieldTouched)}
-                  onRowHover={onRowHover}
-                  onRowBlur={onRowBlur}
-                  errors={errors}
-                  machineTypes={machineTypes}
-                  kitchenAreas={kitchenAreas}
-                  allSteps={steps}
-                  onClearFocus={onClearFocus}
-                  setValues={setValues}
-                  // computeStepsFormValues={computeStepsFormValues}
-                  // onKeyDown={(e) => _onKeyDown(e, section)}
-                />
+                <>
+                  <ReusableStepParent
+                    step={values}
+                    hoveredRow={hoveredRow}
+                    onRowHover={onRowHover}
+                    onRowBlur={onRowBlur}
+                  />
+                  <ReusableSteps
+                    steps={values?.productionSteps || []}
+                    formValues={values}
+                    isEdition
+                    setFieldValue={setFieldValue}
+                    hoveredRow={hoveredRow}
+                    onFieldFocus={onFieldFocus}
+                    onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
+                    onKeyUp={(e) => onKeyUp(e, setFieldTouched)}
+                    onRowHover={onRowHover}
+                    onRowBlur={onRowBlur}
+                    errors={errors}
+                    machineTypes={machineTypes}
+                    kitchenAreas={kitchenAreas}
+                    allSteps={steps}
+                    onClearFocus={onClearFocus}
+                    setValues={setValues}
+                    // computeStepsFormValues={computeStepsFormValues}
+                    // onKeyDown={(e) => _onKeyDown(e, section)}
+                  />
+                </>
               );
             }}
           </Formik>
