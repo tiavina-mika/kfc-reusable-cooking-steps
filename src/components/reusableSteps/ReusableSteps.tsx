@@ -25,6 +25,7 @@ export const COMPONENT_NAME = "STEPS";
 const StyledAccordion = styled((props: AccordionProps) => (
   <Accordion {...props} />
 ))({
+  borderLeft: "8px solid " + COLORS.DARK_YELLOW_REUSABLE_STEP_PARENT,
   "&:not(:last-child)": {
     borderBottom: 0
   },
@@ -142,12 +143,12 @@ const ReusableSteps: FC<Props> = ({
   // };
 
   const _hasError = (index: number, field: string) => {
-    return false;
-    // return errors?.productionSteps[index]?.[field];
+    return errors?.productionSteps?.[index]?.[field];
   };
 
   return (
-    <Box className="flexColumn">
+    <Box className="flexColumn" sx={{ position: "relative" }}>
+      {/* <StyledLeftBar /> */}
       {steps.map((step, index) => (
         <StyledAccordion
           elevation={0}
@@ -160,6 +161,7 @@ const ReusableSteps: FC<Props> = ({
             expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
             onMouseEnter={() => onRowHover(COMPONENT_NAME, index)}
             onMouseLeave={onRowBlur}
+            // sx={{ gcolor: 'red' }}
           >
             {isEdition ? (
               <EditableReusableStep
