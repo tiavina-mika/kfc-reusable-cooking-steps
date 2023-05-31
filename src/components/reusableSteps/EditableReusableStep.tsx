@@ -210,9 +210,9 @@ const EditableReusableStep: FC<Props> = ({
     newSteps[stepIndex].name = value;
 
     if (reason === "selectOption" && step) {
-      const newSection =
+      const newStep =
         parseProductionStepsToObject([step])[0] || getDefaultSteps();
-      newSteps[stepIndex] = newSection;
+      newSteps[stepIndex] = newStep;
 
       newSteps[stepIndex].error = false;
       newSteps[stepIndex].id = null;
@@ -221,8 +221,9 @@ const EditableReusableStep: FC<Props> = ({
 
       const newFormValues: Record<string, any> = { ...formValues };
       newFormValues.productionSteps = newSteps;
+      newFormValues.name = value?.toUpperCase();
 
-      // newSections[stepIndex].productionSteps.forEach((step, stepIndex) => {
+      // newSteps[stepIndex].productionSteps.forEach((step, stepIndex) => {
       //   step.stepComponents.forEach((_, ingredientIndex) => {
       //     computeProductionStepsRecipeOnFieldChange(
       //       newFormValues,
