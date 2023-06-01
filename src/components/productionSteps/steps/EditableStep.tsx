@@ -232,9 +232,14 @@ const EditableStep: FC<Props> = ({
     _stopPropagation(event);
   };
 
+  // change the reusable step name by the last step child name
   const handleNameBlur = (event) => {
-    if (isReusable && steps[index].name) {
-      setFieldValue("name", steps[index].name);
+    if (isReusable) {
+      const lastStep = steps[steps.length - 1];
+      const currentStep = steps[index];
+      if (currentStep.name && lastStep?.index === currentStep.index) {
+        setFieldValue("name", steps[index].name);
+      }
     }
 
     if (!event) return;
