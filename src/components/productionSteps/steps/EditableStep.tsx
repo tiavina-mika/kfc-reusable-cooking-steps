@@ -214,7 +214,7 @@ const EditableStep: FC<Props> = ({
     _stopPropagation(event);
   };
 
-  const _removeStep = (index, event = null) => {
+  const _removeStep = (index, event) => {
     const newSteps = [...steps];
     newSteps.splice(index, 1);
     if (!newSteps.length) {
@@ -229,6 +229,15 @@ const EditableStep: FC<Props> = ({
       computeReusableStepsFormValues(newSteps);
     }
 
+    // the reusable step name should always be the last step name
+    if (isReusable) {
+      const newLastStep = newSteps[newSteps.length - 1];
+      if (newLastStep) {
+        setFieldValue("name", newLastStep?.name);
+      }
+    }
+
+    if (!event) return;
     _stopPropagation(event);
   };
 
