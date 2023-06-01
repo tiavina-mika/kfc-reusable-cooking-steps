@@ -4,14 +4,11 @@ import styled from "@emotion/styled";
 import {
   Accordion,
   AccordionProps,
-  AccordionSummary,
-  AccordionSummaryProps,
   Box
 } from "@mui/material";
 
-import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../utils/constant";
-// import StepPreview from "./StepPreview";
-import EditableReusableStep from "./EditableReusableStep";
+import { COLORS } from "../../utils/constant";
+import EditableSelectedReusableStep from "./EditableSelectedReusableStep";
 import { IHoveredRow } from "../productionSteps/sections/Sections";
 import { StyledStepAccordionSummary } from "../productionSteps/StyledSectionComponents";
 
@@ -20,7 +17,6 @@ export const COMPONENT_NAME = "STEPS";
 // ----------------------------------------------- //
 // -------------- styled components -------------- //
 // ----------------------------------------------- //
-// -------------- Table -------------- //
 
 // -------------- Accordion -------------- //
 const StyledAccordion = styled((props: AccordionProps) => (
@@ -33,35 +29,6 @@ const StyledAccordion = styled((props: AccordionProps) => (
     display: "none"
   }
 });
-
-// type StyledAccordionSummaryProps = {
-//   expandedIconLeftStep?: number;
-// };
-// const StyledAccordionSummary = styled(
-//   (props: AccordionSummaryProps) => <AccordionSummary {...props} />,
-//   {
-//     shouldForwardProp: (prop) => prop !== "expandedIconLeftStep"
-//   }
-// )<StyledAccordionSummaryProps>(({ expandedIconLeftStep = 0 }) => ({
-//   flexDirection: "row-reverse",
-//   position: "relative",
-//   // opened and closed expanded icon
-//   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded,& .MuiAccordionSummary-expandIconWrapper": {
-//     position: "sticky",
-//     left:
-//       PRODUCTION_STEPS_SPACINGS.ACCORDION_EXPANDED_ICON_LEFT +
-//       PRODUCTION_STEPS_SPACINGS.STEP_FIRST_COL_PL_DIFF +
-//       expandedIconLeftStep
-//   },
-//   // row
-//   "& .MuiAccordionSummary-content": {
-//     padding: 0,
-//     margin: 0,
-//     borderBottom: "1px solid #cccccc",
-//     marginLeft: -28, // important! for the summary to not take account of the expand icon space
-//     backgroundColor: COLORS.PRODUCTION_STEPS_GREY
-//   }
-// }));
 
 const StyledLeftBar = styled("div")({
   width: 8,
@@ -174,7 +141,7 @@ const ReusableSteps: FC<Props> = ({
             onMouseLeave={onRowBlur}
           >
             {isEdition ? (
-              <EditableReusableStep
+              <EditableSelectedReusableStep
                 steps={steps}
                 step={step}
                 formValues={formValues}

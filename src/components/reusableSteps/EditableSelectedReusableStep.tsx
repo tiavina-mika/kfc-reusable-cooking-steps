@@ -37,17 +37,6 @@ import { parseProductionStepsToObject } from "../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
-const StyledTextFieldName = styled(StyledProductionStepTextField)({
-  width: 460,
-  "& .MuiInputBase-root": {
-    height: "100%"
-  }
-});
-
-const FormikTextFieldName = ({ field, ...props }) => (
-  <StyledTextFieldName {...field} {...props} />
-);
-
 const FormikTextField = ({ field, ...props }) => (
   <StyledProductionStepTextField {...field} {...props} />
 );
@@ -135,13 +124,12 @@ type Props = {
   allSteps: Record<string, any>[];
   formValues: Record<string, any>;
   setValues: any;
-
   // computeStepsFormValues: (
   //   steps: Record<string, any>,
   // ) => void;
 };
 
-const EditableReusableStep: FC<Props> = ({
+const EditableSelectedReusableStep: FC<Props> = ({
   steps,
   step,
   index,
@@ -635,4 +623,4 @@ const EditableReusableStep: FC<Props> = ({
   );
 };
 
-export default EditableReusableStep;
+export default EditableSelectedReusableStep;

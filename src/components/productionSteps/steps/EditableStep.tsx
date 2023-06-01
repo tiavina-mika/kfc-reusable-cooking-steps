@@ -291,13 +291,10 @@ const EditableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  {/* {!isReusable
-                    ? ( */}
                   <Field
                     component={FormikTextFieldName}
                     name={getFieldName("name")}
                     onClick={_stopPropagation}
-                    // onChang={_stopPropagation}
                     onFocus={onFieldFocus}
                     onBlur={handleNameBlur}
                     onKeyUp={onKeyUp}
