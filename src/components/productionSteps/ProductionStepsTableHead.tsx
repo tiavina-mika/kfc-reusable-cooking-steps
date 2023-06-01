@@ -64,7 +64,6 @@ const StyledHeadCell = styled(Box, {
   if (props.addBackground) {
     defaultStyles.backgroundColor = "#2196f3";
   }
-
   if (props.align) {
     defaultStyles.justifyContent = getCellAlignment(props.align);
   }
@@ -96,7 +95,8 @@ const ProductionStepsTableHead: FC<Props> = ({
           isFirstColumn={index === 0}
           isLastColumn={isHeadersLastColumn(headers.length, index)}
           addBackground={
-            hasAnyHoveredRow && isHeadersLastColumn(headers.length, index)
+            (hasAnyHoveredRow && isHeadersLastColumn(headers.length, index)) ||
+            index === 0
           }
           sx={{
             width: PRODUCTION_STEPS_COL_WIDTHS[index],

@@ -88,30 +88,9 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
   };
 
   const _onSubmit = (values) => {
+    console.log("values", values);
     onSave(values);
-    // onSave(cloneDeep(values), recipe, "6" === recipe.status).then(onStopEdit)
   };
-
-  // const computeReusableStepsFormValues = useCallback(
-  //   (steps: Record<string, any>, formValues: Record<string, any>, setValues: any) => {
-  //     const newFormValues = { ...formValues };
-
-  //     steps.forEach((step, stepIndex) => {
-  //       step.stepComponents.forEach((_, ingredientIndex) => {
-  //         computeProductionStepsRecipeOnFieldChange(
-  //           newFormValues,
-  //           // sectionIndex,
-  //           stepIndex,
-  //           ingredientIndex
-  //         );
-  //       });
-  //     });
-
-  //     newFormValues.productionSteps = steps;
-  //     setValues(newFormValues);
-  //   },
-  //   [sections, formValues, setValues]
-  // );
 
   return (
     <Box className="flexColumn">
