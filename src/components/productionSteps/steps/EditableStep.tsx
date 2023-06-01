@@ -232,25 +232,13 @@ const EditableStep: FC<Props> = ({
     _stopPropagation(event);
   };
 
-  const onNameBlur = (event) => {
-    console.log(steps);
-    // if (isReusable) {
-    //   setFieldValue('name', )
-    // }
-    // console.log('ev', e)
+  const handleNameBlur = (event) => {
     if (isReusable && steps[index].name) {
       setFieldValue("name", steps[index].name);
     }
 
     if (!event) return;
     onFieldBlur(event);
-  };
-
-  const onNameChange = (event) => {
-    const name = event.target.value;
-    // setFieldValue('name', name);
-    setFieldValue(getFieldName("name"), name);
-    _stopPropagation(event);
   };
 
   return (
@@ -297,28 +285,9 @@ const EditableStep: FC<Props> = ({
                     onClick={_stopPropagation}
                     // onChang={_stopPropagation}
                     onFocus={onFieldFocus}
-                    onBlur={onNameBlur}
+                    onBlur={handleNameBlur}
                     onKeyUp={onKeyUp}
-                    // onBlur={handleNameChange}
                   />
-                  {/* ) : (
-                      <StyledTextFieldName
-                        name={getFieldName('name')}
-                        onClick={_stopPropagation}
-                        onChange={onNameChange}
-                        onFocus={onFieldFocus}
-                        onBlur={onNameBlur}
-                      />
-                    ) */}
-                  }
-                  {/* <StyledTextFieldName
-                    name={getFieldName('name')}
-                    onClick={_stopPropagation}
-                    onClick={_stopPropagation}
-                    onFocus={onFieldFocus}
-                    onBlur={onFieldBlur}
-                    onKeyUp={onKeyUp}
-                  /> */}
                 </Stack>
                 <ErrorMessage
                   name={getFieldName("name")}
