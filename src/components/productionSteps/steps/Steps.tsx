@@ -66,7 +66,7 @@ const StyledAccordionSummary = styled(
 type Props = {
   steps: Record<string, any>[];
   isEdition: boolean;
-  sectionIndex: number;
+  sectionIndex?: number;
   onRowHover: (
     component: string,
     index: number,
@@ -87,15 +87,17 @@ type Props = {
   // ) => void;
   // deleteHover: Record<string, any>;
   errors: Record<string, any>;
-  setFieldValue: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean | undefined
-  ) => Promise<FormikErrors<any>> | Promise<void>;
+  setFieldValue: any;
   // onDeleteBlur: () => void;
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
-  computeStepsFormValues: (steps: Record<string, any>, sectionIndex: number) => void;
+  hasError: (index: number, field: string, sectionIndex?: number) => boolean;
+  computeStepsFormValues?: (
+    steps: Record<string, any>,
+    sectionIndex: number
+  ) => void;
+  computeReusableStepsFormValues?: (steps: Record<string, any>) => void;
+  isReusable?: boolean;
 };
 
 const Steps: FC<Props> = ({
@@ -117,7 +119,10 @@ const Steps: FC<Props> = ({
   errors,
   machineTypes,
   kitchenAreas,
-  computeStepsFormValues
+  computeStepsFormValues,
+  computeReusableStepsFormValues,
+  hasError,
+  isReusable
   // onDeleteBlur
 }) => {
   // do not display steps row in preview if it's empty
@@ -148,7 +153,8 @@ const Steps: FC<Props> = ({
   // };
 
   const _hasError = (index: number, field: string) => {
-    return errors.sections?.[sectionIndex]?.productionSteps[index]?.[field];
+    // return errors.sections?.[sectionIndex]?.productionSteps[index]?.[field];
+    return hasError(index, field, sectionIndex);
   };
 
   return (
@@ -187,6 +193,9 @@ const Steps: FC<Props> = ({
                 machineTypes={machineTypes}
                 kitchenAreas={kitchenAreas}
                 computeStepsFormValues={computeStepsFormValues}
+                computeReusableStepsFormValues={computeReusableStepsFormValues}
+                // onAddStep={handleAddStep}
+                isReusable={isReusable}
               />
             ) : (
               <StepPreview step={step} index={index} />

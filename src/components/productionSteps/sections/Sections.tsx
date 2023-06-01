@@ -187,6 +187,18 @@ const Sections: FC<Props> = ({
     errors.sections[index] &&
     (errors.sections[index].name || errors.sections[index].parentPercent);
 
+  const _hasStepError = (
+    index: number,
+    field: string,
+    sectionIndex?: number
+  ) => {
+    return errors.sections?.[sectionIndex]?.productionSteps[index]?.[field];
+  };
+
+  // const onAddStep = (sectionIndex: number, newSteps: any[]) => {
+  //   setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
+  // }
+
   return (
     <Box className="flexColumn">
       {sections.map((section, index) => (
@@ -239,6 +251,8 @@ const Sections: FC<Props> = ({
               kitchenAreas={kitchenAreas}
               setFieldValue={setFieldValue}
               computeStepsFormValues={computeStepsFormValues}
+              hasError={_hasStepError}
+              isReusable={false}
               // onKeyDown={(e) => _onKeyDown(e, section)}
             />
           </AccordionDetails>

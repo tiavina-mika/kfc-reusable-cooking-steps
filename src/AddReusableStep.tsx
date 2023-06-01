@@ -1,11 +1,14 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import ProductionStepsTable from "./components/productionSteps/ProductionStepsTable";
 
 import ProductionStepsTableHead from "./components/productionSteps/ProductionStepsTableHead";
-import { getReusableFormInitialValues } from "./utils/recipeUtils";
+import {
+  computeProductionStepsRecipeOnFieldChange,
+  getReusableFormInitialValues
+} from "./utils/recipeUtils";
 import { cloneDeep } from "lodash";
 import ReusableSteps from "./components/reusableSteps/ReusableSteps";
 import { machineTypes } from "./utils/data/machineTypes";
@@ -13,6 +16,8 @@ import { kitchenAreas } from "./utils/data/kitchenAreas";
 import { steps } from "./utils/data/step";
 import { ReusableProductionStepSchema } from "./utils/validators";
 import ReusableStepParent from "./components/reusableSteps/ReusableStepParent";
+import Steps from "./components/productionSteps/steps/Steps";
+import ReusableStepsEdition from "./components/reusableSteps/ReusableStepsEdition";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -87,6 +92,27 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
     // onSave(cloneDeep(values), recipe, "6" === recipe.status).then(onStopEdit)
   };
 
+  // const computeReusableStepsFormValues = useCallback(
+  //   (steps: Record<string, any>, formValues: Record<string, any>, setValues: any) => {
+  //     const newFormValues = { ...formValues };
+
+  //     steps.forEach((step, stepIndex) => {
+  //       step.stepComponents.forEach((_, ingredientIndex) => {
+  //         computeProductionStepsRecipeOnFieldChange(
+  //           newFormValues,
+  //           // sectionIndex,
+  //           stepIndex,
+  //           ingredientIndex
+  //         );
+  //       });
+  //     });
+
+  //     newFormValues.productionSteps = steps;
+  //     setValues(newFormValues);
+  //   },
+  //   [sections, formValues, setValues]
+  // );
+
   return (
     <Box className="flexColumn">
       <Box p={1.2} className="flexRow justifyEnd flexEnd flex1 stretchSelf">
@@ -131,7 +157,7 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
                     onRowHover={onRowHover}
                     onRowBlur={onRowBlur}
                   />
-                  <ReusableSteps
+                  {/* <ReusableSteps
                     steps={values?.productionSteps || []}
                     formValues={values}
                     isEdition
@@ -147,6 +173,23 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
                     kitchenAreas={kitchenAreas}
                     allSteps={steps}
                     onClearFocus={onClearFocus}
+                    setValues={setValues}
+                    // computeStepsFormValues={computeStepsFormValues}
+                    // onKeyDown={(e) => _onKeyDown(e, section)}
+                  /> */}
+                  <ReusableStepsEdition
+                    hoveredRow={hoveredRow}
+                    onFieldFocus={onFieldFocus}
+                    onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
+                    onKeyUp={(e) => onKeyUp(e, setFieldTouched)}
+                    onRowHover={onRowHover}
+                    onRowBlur={onRowBlur}
+                    errors={errors}
+                    machineTypes={machineTypes}
+                    kitchenAreas={kitchenAreas}
+                    setFieldValue={setFieldValue}
+                    // hasError={(index, field) => !!errors.productionSteps?.[index]?.[field]}
+                    formValues={values}
                     setValues={setValues}
                     // computeStepsFormValues={computeStepsFormValues}
                     // onKeyDown={(e) => _onKeyDown(e, section)}
