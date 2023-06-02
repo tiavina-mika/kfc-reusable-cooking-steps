@@ -34,7 +34,7 @@ const StyledHeadCell = styled(Box, {
   shouldForwardProp: (prop) =>
     prop !== "addBackground" &&
     prop !== "isFirstColumn" &&
-    prop !== "isLatsColumn" &&
+    prop !== "isLastColumn" &&
     prop !== "align"
 })<StyledTableHeadCellProps>((props) => {
   let defaultStyles: Record<string, any> = {

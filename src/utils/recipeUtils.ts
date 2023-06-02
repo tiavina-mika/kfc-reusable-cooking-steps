@@ -201,16 +201,34 @@ export const getDefaultIngredients = () => {
   };
 };
 
-export const getDefaultSteps = () => {
+export const getDefaultStepComponents = () => {
+  return {
+    index: uuidv4(),
+    grossWeight: 0,
+    cookingMode: null,
+    supplierItem: null,
+    error: true,
+    complexity: null,
+    cookingModeLabel: null,
+    cost: null,
+    netWeight: null,
+    realCost: null,
+    transformRate: null,
+    transformationMode: null,
+    emptyComponent: true
+  };
+};
+
+export function getDefaultSteps() {
   return {
     index: uuidv4(),
     name: "",
     description: "",
     ingredients: [getDefaultIngredients()],
-    stepComponents: [getDefaultIngredients()],
+    stepComponents: [getDefaultStepComponents()],
     error: true
   };
-};
+}
 
 export const getDefaultSection = () => {
   return {
@@ -738,30 +756,30 @@ export const computeReusableProductionStepsOnFieldChange = (
   stepIndex = null,
   stepComponentIndex = null
 ) => {
-    if (stepIndex !== null) {
-      const step = reusableStep.productionSteps[stepIndex];
+  if (stepIndex !== null) {
+    const step = reusableStep.productionSteps[stepIndex];
 
-      if (stepComponentIndex !== null) {
-        const stepComponent = step.stepComponents[stepComponentIndex];
+    if (stepComponentIndex !== null) {
+      const stepComponent = step.stepComponents[stepComponentIndex];
 
-        if (stepComponent) {
-          const {
-            cost,
-            realCost,
-            grossWeight,
-            netWeight,
-            transformRate,
-            cookingModeLabel
-          }: Record<string, any> = computeIngredientData(stepComponent);
-          stepComponent.grossWeight = grossWeight;
-          stepComponent.netWeight = netWeight;
-          stepComponent.cost = cost;
-          stepComponent.realCost = realCost;
-          stepComponent.transformRate = transformRate;
-          stepComponent.cookingModeLabel = cookingModeLabel;
-        }
+      if (stepComponent) {
+        const {
+          cost,
+          realCost,
+          grossWeight,
+          netWeight,
+          transformRate,
+          cookingModeLabel
+        }: Record<string, any> = computeIngredientData(stepComponent);
+        stepComponent.grossWeight = grossWeight;
+        stepComponent.netWeight = netWeight;
+        stepComponent.cost = cost;
+        stepComponent.realCost = realCost;
+        stepComponent.transformRate = transformRate;
+        stepComponent.cookingModeLabel = cookingModeLabel;
       }
-
-      computeStepData(step, "stepComponents");
     }
+
+    computeStepData(step, "stepComponents");
+  }
 };

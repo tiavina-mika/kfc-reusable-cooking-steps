@@ -201,11 +201,11 @@ const EditableStep: FC<Props> = ({
       computeStepData(newStep, "stepComponents");
     }
     if (isReusable) {
-      setFieldValue(`productionSteps`, newSteps);
+      setFieldValue("productionSteps", newSteps);
 
-      // the reusable step name is the second last fullfield step
-      if (newSteps[newSteps.length - 2]) {
-        setFieldValue(`name`, newSteps[newSteps.length - 2].name);
+      const newLastStep = newSteps[newSteps.length - 1];
+      if (newLastStep) {
+        setFieldValue("name", newLastStep?.name?.toUpperCase());
       }
     } else {
       setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
@@ -233,7 +233,7 @@ const EditableStep: FC<Props> = ({
     if (isReusable) {
       const newLastStep = newSteps[newSteps.length - 1];
       if (newLastStep) {
-        setFieldValue("name", newLastStep?.name);
+        setFieldValue("name", newLastStep?.name.toUpperCase());
       }
     }
 
@@ -247,7 +247,8 @@ const EditableStep: FC<Props> = ({
       const lastStep = steps[steps.length - 1];
       const currentStep = steps[index];
       if (currentStep.name && lastStep?.index === currentStep.index) {
-        setFieldValue("name", steps[index].name);
+        const name =  steps[index].name
+        setFieldValue("name", name.toUpperCase());
       }
     }
 
