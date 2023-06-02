@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, Fragment } from "react";
 
 import styled from "@emotion/styled";
 import {
@@ -169,15 +169,9 @@ const Steps: FC<Props> = ({
   return (
     <Box className="flexColumn" sx={{ position: "relative" }}>
       {steps.map((step, index) => (
-        <>
+        <Fragment key={index}>
           {isReusable && <StyledLeftBar />}
-          <StyledAccordion
-            elevation={0}
-            defaultExpanded
-            square
-            disableGutters
-            key={index}
-          >
+          <StyledAccordion elevation={0} defaultExpanded square disableGutters>
             <StyledAccordionSummary
               expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
               onMouseEnter={() =>
@@ -217,7 +211,7 @@ const Steps: FC<Props> = ({
               )}
             </StyledAccordionSummary>
           </StyledAccordion>
-        </>
+        </Fragment>
       ))}
     </Box>
   );
