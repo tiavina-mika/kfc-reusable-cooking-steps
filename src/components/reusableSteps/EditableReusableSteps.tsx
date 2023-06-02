@@ -1,8 +1,5 @@
 import React, { FC, useCallback, useEffect } from "react";
-import {
-  computeProductionStepsRecipeOnFieldChange,
-  computeReusableProductionStepsOnFieldChange
-} from "../../utils/recipeUtils";
+import { computeReusableProductionStepsOnFieldChange } from "../../utils/recipeUtils";
 
 import { IHoveredRow } from "../productionSteps/sections/Sections";
 import Steps from "../productionSteps/steps/Steps";
