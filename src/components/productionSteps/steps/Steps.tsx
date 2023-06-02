@@ -63,6 +63,16 @@ const StyledAccordionSummary = styled(
   }
 }));
 
+const StyledLeftBar = styled("div")({
+  width: 8,
+  backgroundColor: COLORS.DARK_YELLOW_REUSABLE_STEP_PARENT,
+  position: "absolute",
+  left: 0,
+  top: 0,
+  height: "100%",
+  zIndex: 100000
+});
+
 type Props = {
   steps: Record<string, any>[];
   isEdition: boolean;
@@ -158,50 +168,57 @@ const Steps: FC<Props> = ({
   };
 
   return (
-    <Box className="flexColumn">
+    <Box className="flexColumn" sx={{ position: "relative" }}>
       {steps.map((step, index) => (
-        <StyledAccordion
-          elevation={0}
-          defaultExpanded
-          square
-          disableGutters
-          key={index}
-        >
-          <StyledAccordionSummary
-            expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
-            onMouseEnter={() => onRowHover(COMPONENT_NAME, index, sectionIndex)}
-            onMouseLeave={onRowBlur}
+        <>
+          {isReusable && <StyledLeftBar />}
+          <StyledAccordion
+            elevation={0}
+            defaultExpanded
+            square
+            disableGutters
+            key={index}
           >
-            {isEdition ? (
-              <EditableStep
-                steps={steps}
-                step={step}
-                index={index}
-                isEdition={isEdition}
-                // index={index}
-                isHover={_isHover(index)}
-                sectionIndex={sectionIndex}
-                // isDeleteHover={_isDeleteHover(index)}
-                // genericSections={genericSections}
-                setFieldValue={setFieldValue}
-                // onClearFocus={onClearFocus}
-                onFieldFocus={onFieldFocus}
-                onFieldBlur={onFieldBlur}
-                onKeyUp={onKeyUp}
-                // onDeleteBlur={onDeleteBlur}
-                hasError={_hasError}
-                machineTypes={machineTypes}
-                kitchenAreas={kitchenAreas}
-                computeStepsFormValues={computeStepsFormValues}
-                computeReusableStepsFormValues={computeReusableStepsFormValues}
-                // onAddStep={handleAddStep}
-                isReusable={isReusable}
-              />
-            ) : (
-              <StepPreview step={step} index={index} />
-            )}
-          </StyledAccordionSummary>
-        </StyledAccordion>
+            <StyledAccordionSummary
+              expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
+              onMouseEnter={() =>
+                onRowHover(COMPONENT_NAME, index, sectionIndex)
+              }
+              onMouseLeave={onRowBlur}
+            >
+              {isEdition ? (
+                <EditableStep
+                  steps={steps}
+                  step={step}
+                  index={index}
+                  isEdition={isEdition}
+                  // index={index}
+                  isHover={_isHover(index)}
+                  sectionIndex={sectionIndex}
+                  // isDeleteHover={_isDeleteHover(index)}
+                  // genericSections={genericSections}
+                  setFieldValue={setFieldValue}
+                  // onClearFocus={onClearFocus}
+                  onFieldFocus={onFieldFocus}
+                  onFieldBlur={onFieldBlur}
+                  onKeyUp={onKeyUp}
+                  // onDeleteBlur={onDeleteBlur}
+                  hasError={_hasError}
+                  machineTypes={machineTypes}
+                  kitchenAreas={kitchenAreas}
+                  computeStepsFormValues={computeStepsFormValues}
+                  computeReusableStepsFormValues={
+                    computeReusableStepsFormValues
+                  }
+                  // onAddStep={handleAddStep}
+                  isReusable={isReusable}
+                />
+              ) : (
+                <StepPreview step={step} index={index} />
+              )}
+            </StyledAccordionSummary>
+          </StyledAccordion>
+        </>
       ))}
     </Box>
   );

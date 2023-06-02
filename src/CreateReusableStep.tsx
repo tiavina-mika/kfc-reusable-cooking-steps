@@ -1,23 +1,17 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 import { Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
 import ProductionStepsTable from "./components/productionSteps/ProductionStepsTable";
 
 import ProductionStepsTableHead from "./components/productionSteps/ProductionStepsTableHead";
-import {
-  computeProductionStepsRecipeOnFieldChange,
-  getReusableFormInitialValues
-} from "./utils/recipeUtils";
+import { getReusableFormInitialValues } from "./utils/recipeUtils";
 import { cloneDeep } from "lodash";
-import ReusableSteps from "./components/reusableSteps/ReusableSteps";
 import { machineTypes } from "./utils/data/machineTypes";
 import { kitchenAreas } from "./utils/data/kitchenAreas";
-import { steps } from "./utils/data/step";
 import { ReusableProductionStepSchema } from "./utils/validators";
 import ReusableStepParent from "./components/reusableSteps/ReusableStepParent";
-import Steps from "./components/productionSteps/steps/Steps";
-import ReusableStepsEdition from "./components/reusableSteps/ReusableStepsEdition";
+import EditableReusableSteps from "./components/reusableSteps/EditableReusableSteps";
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -37,7 +31,7 @@ const headers = [
 type Props = {
   onSave?: (values: Record<string, any>) => void;
 };
-const AddReusableStep: FC<Props> = ({ onSave }) => {
+const CreateReusableStep: FC<Props> = ({ onSave }) => {
   const formRef = useRef();
   const [initialValues, setInitialValues] = useState(null);
   /*
@@ -63,8 +57,6 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
     if (fieldFocused) return;
     setHoveredRow({ component, index });
   };
-
-  const onClearFocus = () => setFieldFocused(false);
 
   const onFieldFocus = () => setFieldFocused(true);
 
@@ -136,27 +128,7 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
                     onRowHover={onRowHover}
                     onRowBlur={onRowBlur}
                   />
-                  {/* <ReusableSteps
-                    steps={values?.productionSteps || []}
-                    formValues={values}
-                    isEdition
-                    setFieldValue={setFieldValue}
-                    hoveredRow={hoveredRow}
-                    onFieldFocus={onFieldFocus}
-                    onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
-                    onKeyUp={(e) => onKeyUp(e, setFieldTouched)}
-                    onRowHover={onRowHover}
-                    onRowBlur={onRowBlur}
-                    errors={errors}
-                    machineTypes={machineTypes}
-                    kitchenAreas={kitchenAreas}
-                    allSteps={steps}
-                    onClearFocus={onClearFocus}
-                    setValues={setValues}
-                    // computeStepsFormValues={computeStepsFormValues}
-                    // onKeyDown={(e) => _onKeyDown(e, section)}
-                  /> */}
-                  <ReusableStepsEdition
+                  <EditableReusableSteps
                     hoveredRow={hoveredRow}
                     onFieldFocus={onFieldFocus}
                     onFieldBlur={(e) => onFieldBlur(e, setFieldTouched)}
@@ -167,11 +139,9 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
                     machineTypes={machineTypes}
                     kitchenAreas={kitchenAreas}
                     setFieldValue={setFieldValue}
-                    // hasError={(index, field) => !!errors.productionSteps?.[index]?.[field]}
                     formValues={values}
                     setValues={setValues}
                     // computeStepsFormValues={computeStepsFormValues}
-                    // onKeyDown={(e) => _onKeyDown(e, section)}
                   />
                 </>
               );
@@ -183,4 +153,4 @@ const AddReusableStep: FC<Props> = ({ onSave }) => {
   );
 };
 
-export default AddReusableStep;
+export default CreateReusableStep;

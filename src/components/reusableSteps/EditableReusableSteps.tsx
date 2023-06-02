@@ -27,7 +27,7 @@ type Props = {
   onFieldBlur: any;
   onKeyUp: (event: any, setFieldTouched: any) => void;
 };
-const ReusableStepsEdition: FC<Props> = ({
+const EditableReusableSteps: FC<Props> = ({
   formValues,
   errors,
   setFieldValue,
@@ -88,4 +88,4 @@ const ReusableStepsEdition: FC<Props> = ({
   );
 };
 
-export default ReusableStepsEdition;
+export default EditableReusableSteps;
