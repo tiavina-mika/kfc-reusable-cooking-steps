@@ -13,7 +13,6 @@ import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
 import { IHoveredRow } from "../sections/Sections";
-import { FormikErrors } from "formik";
 
 export const COMPONENT_NAME = "STEPS";
 
