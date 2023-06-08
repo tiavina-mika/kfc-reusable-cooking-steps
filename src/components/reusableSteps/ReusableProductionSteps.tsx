@@ -15,8 +15,13 @@ import ReusableStepsTableHead from "./list/ReusableStepsTableHead";
 type Props = {
   steps: Record<string, any>;
   goToStepCreation: () => void;
+  onSelectStep: (step: Record<string, any>) => void;
 };
-const ReusableProductionSteps = ({ steps, goToStepCreation }: Props) => {
+const ReusableProductionSteps = ({
+  onSelectStep,
+  steps,
+  goToStepCreation
+}: Props) => {
   return (
     <Box bgcolor="#fff">
       {/* --------- top --------- */}
@@ -31,7 +36,12 @@ const ReusableProductionSteps = ({ steps, goToStepCreation }: Props) => {
         <TableBody>
           {steps.map((step) => {
             return (
-              <TableRow hover tabIndex={-1} key={step.objectId}>
+              <TableRow
+                hover
+                tabIndex={-1}
+                key={step.objectId}
+                onClick={() => onSelectStep(step)}
+              >
                 <TableCell>{step.name}</TableCell>
                 <TableCell>{step.cost}</TableCell>
               </TableRow>

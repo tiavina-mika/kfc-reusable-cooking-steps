@@ -32,8 +32,9 @@ const headers = [
 type Props = {
   onSave?: (values: Record<string, any>) => void;
   onCancel: () => void;
+  step?: Record<string, any>;
 };
-const CreateReusableStep: FC<Props> = ({ onSave, onCancel }) => {
+const CreateReusableStep: FC<Props> = ({ step, onSave, onCancel }) => {
   const formRef = useRef();
   const [initialValues, setInitialValues] = useState(null);
   /*
@@ -45,10 +46,10 @@ const CreateReusableStep: FC<Props> = ({ onSave, onCancel }) => {
   const [fieldFocused, setFieldFocused] = useState<boolean>(false);
 
   useEffect(() => {
-    const formValues = getReusableFormInitialValues();
+    const formValues = getReusableFormInitialValues(step);
     setInitialValues(formValues);
     setDefaultValues(cloneDeep(formValues));
-  }, []);
+  }, [step]);
 
   const onRowBlur = () => {
     if (fieldFocused) return;

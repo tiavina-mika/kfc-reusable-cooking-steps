@@ -648,10 +648,14 @@ export const getRecipeSectionsFormInitialValues = (
   return values;
 };
 
-export const getReusableFormInitialValues = () => {
+export const getReusableFormInitialValues = (step: Record<string, any>) => {
+  const productionSteps = step
+    ? parseProductionStepsToObject(step.productionSteps)
+    : [getDefaultSteps()];
+  
   const values: Record<string, any> = {
-    productionSteps: [getDefaultSteps()],
-    name: ""
+    productionSteps,
+    name: step ? step.name : ""
   };
 
   return values;
