@@ -11,6 +11,7 @@ const App = () => {
   const [selectedStep, setSelectedStep] = useState<Record<string, any> | null>(
     null
   );
+
   // return <Recipe recipe={recipe} genericSections={sections} />;
   const handleStepCreation = (step) => {
     setSteps((prev) => [step, ...prev]);
