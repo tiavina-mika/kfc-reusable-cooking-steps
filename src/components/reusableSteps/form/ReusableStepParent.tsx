@@ -9,9 +9,9 @@ import {
   StyledStepFirstBodyColumn,
   StyledStepText,
   StyledStickyLastBodyColumn
-} from "../productionSteps/StyledSectionComponents";
-import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
-import { IHoveredRow } from "../productionSteps/sections/Sections";
+} from "../../productionSteps/StyledSectionComponents";
+import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
+import { IHoveredRow } from "../../productionSteps/sections/Sections";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 export const COMPONENT_NAME = "STEP_PARENT";

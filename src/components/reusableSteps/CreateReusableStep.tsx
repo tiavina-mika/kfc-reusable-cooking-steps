@@ -2,16 +2,17 @@ import React, { FC, useEffect, useRef, useState } from "react";
 
 import { Box, Button, Stack } from "@mui/material";
 import { Formik } from "formik";
-import ProductionStepsTable from "./components/productionSteps/ProductionStepsTable";
-
-import ProductionStepsTableHead from "./components/productionSteps/ProductionStepsTableHead";
-import { getReusableFormInitialValues } from "./utils/recipeUtils";
 import { cloneDeep } from "lodash";
-import { machineTypes } from "./utils/data/machineTypes";
-import { kitchenAreas } from "./utils/data/kitchenAreas";
-import { ReusableProductionStepSchema } from "./utils/validators";
-import ReusableStepParent from "./components/reusableSteps/ReusableStepParent";
-import EditableReusableSteps from "./components/reusableSteps/EditableReusableSteps";
+
+import ProductionStepsTable from "../productionSteps/ProductionStepsTable";
+import ProductionStepsTableHead from "../productionSteps/ProductionStepsTableHead";
+import { getReusableFormInitialValues } from "../../utils/recipeUtils";
+import { machineTypes } from "../../utils/data/machineTypes";
+import { kitchenAreas } from "../../utils/data/kitchenAreas";
+import { ReusableProductionStepSchema } from "../../utils/validators";
+import ReusableStepParent from "./form/ReusableStepParent";
+import EditableReusableSteps from "./form/EditableReusableSteps";
+
 const headers = [
   { label: "Étape / Article" },
   { label: "Poids en entrée (g)" },
@@ -30,8 +31,9 @@ const headers = [
 
 type Props = {
   onSave?: (values: Record<string, any>) => void;
+  onCancel: () => void;
 };
-const CreateReusableStep: FC<Props> = ({ onSave }) => {
+const CreateReusableStep: FC<Props> = ({ onSave, onCancel }) => {
   const formRef = useRef();
   const [initialValues, setInitialValues] = useState(null);
   /*
@@ -77,6 +79,7 @@ const CreateReusableStep: FC<Props> = ({ onSave }) => {
 
   const handleCancel = () => {
     setInitialValues(defaultValues);
+    onCancel();
   };
 
   const _onSubmit = (values) => {

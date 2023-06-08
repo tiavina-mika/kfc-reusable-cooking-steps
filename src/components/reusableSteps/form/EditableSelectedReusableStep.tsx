@@ -8,7 +8,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  styled
 } from "@mui/material";
 import { ErrorMessage, Field, FormikErrors } from "formik";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,16 +23,16 @@ import {
   StyledStickyLastBodyColumn,
   StyledAutocomplete,
   StyledAutocompleteTextField
-} from "../productionSteps/StyledSectionComponents";
-import StepNameDescription from "../productionSteps/steps/StepNameDescription";
+} from "../../productionSteps/StyledSectionComponents";
+import StepNameDescription from "../../productionSteps/steps/StepNameDescription";
 import {
   getTransformationTypeLabel,
   roundNumber,
   TRANSFORMATION_TYPES
-} from "../../utils/utils";
-import { PRODUCTION_STEPS_COL_WIDTHS } from "../../utils/constant";
-import { getDefaultSteps, STEP_DURATION_UNITS } from "../../utils/recipeUtils";
-import { parseProductionStepsToObject } from "../../utils/recipeUtils";
+} from "../../../utils/utils";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
+import { getDefaultSteps, STEP_DURATION_UNITS } from "../../../utils/recipeUtils";
+import { parseProductionStepsToObject } from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 

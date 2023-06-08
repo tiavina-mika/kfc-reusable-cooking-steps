@@ -7,10 +7,10 @@ import {
   Box
 } from "@mui/material";
 
-import { COLORS } from "../../utils/constant";
+import { COLORS } from "../../../utils/constant";
 import EditableSelectedReusableStep from "./EditableSelectedReusableStep";
-import { IHoveredRow } from "../productionSteps/sections/Sections";
-import { StyledStepAccordionSummary } from "../productionSteps/StyledSectionComponents";
+import { IHoveredRow } from "../../productionSteps/sections/Sections";
+import { StyledStepAccordionSummary } from "../../productionSteps/StyledSectionComponents";
 
 export const COMPONENT_NAME = "STEPS";
 

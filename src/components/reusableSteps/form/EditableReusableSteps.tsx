@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useEffect } from "react";
-import { computeReusableProductionStepsOnFieldChange } from "../../utils/recipeUtils";
+import { computeReusableProductionStepsOnFieldChange } from "../../../utils/recipeUtils";
 
-import { IHoveredRow } from "../productionSteps/sections/Sections";
-import Steps from "../productionSteps/steps/Steps";
+import { IHoveredRow } from "../../productionSteps/sections/Sections";
+import Steps from "../../productionSteps/steps/Steps";
 
 type Props = {
   machineTypes: Record<string, any>[];
