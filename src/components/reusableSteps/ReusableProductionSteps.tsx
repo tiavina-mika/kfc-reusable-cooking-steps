@@ -18,16 +18,16 @@ type Props = {
 };
 const ReusableProductionSteps = ({ steps, goToStepCreation }: Props) => {
   return (
-    <Box bgcolor="green">
+    <Box bgcolor="#fff">
       {/* --------- top --------- */}
-      <Box>
+      <Box sx={{ p: 3 }}>
         <Typography sx={{ fontSize: 18, fontWeight: 500 }}>
           Etapes Réutilisables
         </Typography>
       </Box>
       {/* --------- table --------- */}
       <Table aria-labelledby="tableTitle">
-        {/* <ReusableStepsTableHead /> */}
+        <ReusableStepsTableHead />
         <TableBody>
           {steps.map((step) => {
             return (

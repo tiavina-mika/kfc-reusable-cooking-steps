@@ -16,9 +16,7 @@ type IHeader = {
 };
 const headers: IHeader[] = [
   { id: "name", label: "Nom" },
-  { id: "cost", label: "Coût de l'étape" },
-  { id: "createdAt", label: "Date de création" },
-  { id: "updatedAt", label: "Date de modification" }
+  { id: "cost", label: "Coût de l'étape" }
 ];
 
 const ReusableStepsTableHead = () => {
