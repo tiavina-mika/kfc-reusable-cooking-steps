@@ -34,7 +34,7 @@ type Props = {
   onCancel: () => void;
   step?: Record<string, any>;
 };
-const CreateReusableStep: FC<Props> = ({ step, onSave, onCancel }) => {
+const ReusableStepForm: FC<Props> = ({ step, onSave, onCancel }) => {
   const formRef = useRef();
   const [initialValues, setInitialValues] = useState(null);
   /*
@@ -157,4 +157,4 @@ const CreateReusableStep: FC<Props> = ({ step, onSave, onCancel }) => {
   );
 };
 
-export default CreateReusableStep;
+export default ReusableStepForm;

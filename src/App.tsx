@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreateReusableStep from "./components/reusableSteps/CreateReusableStep";
+import ReusableStepForm from "./components/reusableSteps/ReusableStepForm";
 import ReusableProductionSteps from "./components/reusableSteps/ReusableProductionSteps";
 
 type IPage = "form" | "list";
@@ -33,7 +33,7 @@ const App = () => {
 
   if (page === "form") {
     return (
-      <CreateReusableStep
+      <ReusableStepForm
         onCancel={handleCancelForm}
         onSave={handleStepCreation}
         step={selectedStep}
