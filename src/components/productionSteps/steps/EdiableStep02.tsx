@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 
 import {
   Autocomplete,
@@ -7,7 +7,8 @@ import {
   IconButton,
   MenuItem,
   Select,
-  Stack
+  Stack,
+  styled
 } from "@mui/material";
 import { ErrorMessage, Field, FormikErrors } from "formik";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,11 +21,9 @@ import {
   StyledStepFirstBodyColumn,
   StyledStepText,
   StyledProductionStepsTextarea,
-  StyledStickyLastBodyColumn,
-  StyledAutocomplete,
-  StyledAutocompleteTextField
-} from "../../productionSteps/StyledSectionComponents";
-import StepNameDescription from "../../productionSteps/steps/StepNameDescription";
+  StyledStickyLastBodyColumn
+} from "../StyledSectionComponents";
+import StepNameDescription from "./StepNameDescription";
 import {
   getTransformationTypeLabel,
   roundNumber,
@@ -32,12 +31,23 @@ import {
 } from "../../../utils/utils";
 import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
+  computeStepData,
   getDefaultSteps,
   STEP_DURATION_UNITS
 } from "../../../utils/recipeUtils";
-import { parseProductionStepsToObject } from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
+
+const StyledTextFieldName = styled(StyledProductionStepTextField)({
+  width: 460,
+  "& .MuiInputBase-root": {
+    height: "100%"
+  }
+});
+
+const FormikTextFieldName = ({ field, ...props }) => {
+  return <StyledTextFieldName {...field} {...props} />;
+};
 
 const FormikTextField = ({ field, ...props }) => (
   <StyledProductionStepTextField {...field} {...props} />
@@ -109,11 +119,12 @@ type Props = {
   isHover: boolean;
   // isDeleteHover: boolean;
   // genericSections?: Record<string, any>[];
-  onClearFocus: () => void;
+  // onClearFocus: () => void;
   onFieldFocus: () => void;
-  onFieldBlur: () => void;
+  onFieldBlur: (event?: any) => void;
   onKeyUp: (event: any, setFieldTouched: any) => void;
   // onKeyDown: (event: any) => void;
+  sectionIndex: number;
   setFieldValue: (
     field: string,
     value: any,
@@ -123,26 +134,29 @@ type Props = {
   // onDeleteBlur: () => void;
   machineTypes: Record<string, any>[];
   kitchenAreas: Record<string, any>[];
-  allSteps: Record<string, any>[];
-  formValues: Record<string, any>;
-  setValues: any;
-  // computeStepsFormValues: (
-  //   steps: Record<string, any>,
-  // ) => void;
+  computeStepsFormValues?: (
+    steps: Record<string, any>,
+    sectionIndex: number
+  ) => void;
+  computeReusableStepsFormValues?: (steps: Record<string, any>) => void;
+  // onAddStep?: (value: any) => void;
+  isReusable?: boolean;
 };
 
-const EditableSelectedReusableStep: FC<Props> = ({
+const EditableStep02: FC<Props> = ({
   steps,
   step,
   index,
   isEdition,
+  sectionIndex,
   // steps,
   // index,
   // for style
   isHover,
   // isDeleteHover,
   // genericSections,
-  onClearFocus,
+  setFieldValue,
+  // onClearFocus,
   onFieldFocus,
   onFieldBlur,
   onKeyUp,
@@ -150,25 +164,23 @@ const EditableSelectedReusableStep: FC<Props> = ({
   hasError,
   machineTypes,
   kitchenAreas,
-  allSteps,
-  formValues,
-  setValues,
-  setFieldValue
+  computeStepsFormValues,
+  computeReusableStepsFormValues,
+  isReusable
+  // onAddStep,
   // onDeleteBlur
 }) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
 
-  const getReusableStepOptionLabel = (option) => {
-    if (typeof option === "string") {
-      return option;
-    }
-
-    if (option.get) {
-      return option.get("name") || option.get("description");
-    }
-
-    return option.name || option.description;
-  };
+  const getFieldName = useCallback(
+    (fieldName: string): string => {
+      if (isReusable) {
+        return `productionSteps[${index}].${fieldName}`;
+      }
+      return `sections[${sectionIndex}].productionSteps[${index}].${fieldName}`;
+    },
+    [index, sectionIndex, isReusable]
+  );
 
   // check if the selected value is the same as the option
   const isPointersOptionEqualToValue = (
@@ -179,98 +191,69 @@ const EditableSelectedReusableStep: FC<Props> = ({
     return option.objectId === value.objectId;
   };
 
-  const _onGenericSectionChange = (event, formValue, stepIndex, reason) => {
-    if (!event) return;
-
-    let value = formValue;
-    if (reason === "selectOption") {
-      if (value.get) {
-        value = value.get("name") || value.get("description");
-      } else {
-        value = value.name || value.description;
-      }
-    }
-
-    const step = allSteps.find(
-      (step) => (step.get ? step.get("name") : step.name) === value
-    );
-
-    const newSteps = [...steps];
-
-    newSteps[stepIndex].name = value;
-
-    if (reason === "selectOption" && step) {
-      const newStep =
-        parseProductionStepsToObject([step])[0] || getDefaultSteps();
-      newSteps[stepIndex] = newStep;
-
-      newSteps[stepIndex].error = false;
-      newSteps[stepIndex].id = null;
-      // newSteps[stepIndex].parentId = step.id;
-      newSteps[stepIndex].parentPercent = 100;
-
-      const newFormValues: Record<string, any> = { ...formValues };
-      newFormValues.productionSteps = newSteps;
-      newFormValues.name = value?.toUpperCase();
-
-      // newSteps[stepIndex].productionSteps.forEach((step, stepIndex) => {
-      //   step.stepComponents.forEach((_, ingredientIndex) => {
-      //     computeProductionStepsRecipeOnFieldChange(
-      //       newFormValues,
-      //       stepIndex,
-      //       stepIndex,
-      //       ingredientIndex
-      //     );
-      //   });
-      // });
-
-      setValues(newFormValues);
-    }
-
-    if (reason === "input-change" && steps) {
-      setFieldValue("productionSteps", newSteps);
-    }
-
-    // if (section && !newSteps[stepIndex].parentId) {
-    //   newSteps[stepIndex].parentId = null;
-    //   newSteps[sectionIndex].parentPercent = 0;
-    // }
-
-    if (reason === "selectOption" && step) {
-      onClearFocus();
-    }
-
-    if (event.target) {
-      _stopPropagation(event);
-    }
-  };
-
   const _addStep = (index: number, event = null) => {
     const newSteps = [...steps];
     newSteps.splice(index + 1, 0, getDefaultSteps());
 
     // update production steps and step components data
-    // const newStep = newSteps[newSteps.length - 1];
-    // if (newStep) {
-    //   computeStepData(newStep, "stepComponents");
-    // }
-    setFieldValue(`productionSteps`, newSteps);
+    const newStep = newSteps[newSteps.length - 1];
+    if (newStep) {
+      computeStepData(newStep, "stepComponents");
+    }
+    if (isReusable) {
+      setFieldValue("productionSteps", newSteps);
+
+      const newLastStep = newSteps[newSteps.length - 1];
+      if (newLastStep) {
+        setFieldValue("name", newLastStep?.name?.toUpperCase());
+      }
+    } else {
+      setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
+    }
+    // setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
     _stopPropagation(event);
   };
 
-  const _removeStep = (index, event = null) => {
+  const _removeStep = (index, event) => {
     const newSteps = [...steps];
     newSteps.splice(index, 1);
     if (!newSteps.length) {
       newSteps.splice(0, 0, getDefaultSteps());
     }
 
-    setFieldValue("name", steps[steps.length - 1]?.name);
-    setFieldValue("productionSteps", newSteps);
+    if (computeStepsFormValues) {
+      computeStepsFormValues(newSteps, sectionIndex);
+    }
 
-    // computeStepsFormValues(newSteps, sectionIndex);
+    if (computeReusableStepsFormValues) {
+      computeReusableStepsFormValues(newSteps);
+    }
 
+    // the reusable step name should always be the last step name
+    if (isReusable) {
+      const newLastStep = newSteps[newSteps.length - 1];
+      if (newLastStep) {
+        setFieldValue("name", newLastStep?.name.toUpperCase());
+      }
+    }
+
+    if (!event) return;
     _stopPropagation(event);
+  };
+
+  // change the reusable step name by the last step child name
+  const handleNameBlur = (event) => {
+    if (isReusable) {
+      const lastStep = steps[steps.length - 1];
+      const currentStep = steps[index];
+      if (currentStep.name && lastStep?.index === currentStep.index) {
+        const name = steps[index].name;
+        setFieldValue("name", name.toUpperCase());
+      }
+    }
+
+    if (!event) return;
+    onFieldBlur(event);
   };
 
   return (
@@ -309,59 +292,17 @@ const EditableSelectedReusableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  {/* <Field
+                  <Field
                     component={FormikTextFieldName}
-                    name={`productionSteps[${index}].name`}
+                    name={getFieldName("name")}
                     onClick={_stopPropagation}
                     onFocus={onFieldFocus}
-                    onBlur={onFieldBlur}
+                    onBlur={handleNameBlur}
                     onKeyUp={onKeyUp}
-                    // onKeyDown={onKeyDown}
-                  /> */}
-                  <StyledAutocomplete
-                    freeSolo
-                    disableClearable
-                    selectOnFocus
-                    handleHomeEndKeys
-                    inputValue={
-                      typeof step.name === "string"
-                        ? step.name
-                        : step.get("name")
-                    }
-                    getOptionLabel={getReusableStepOptionLabel}
-                    options={allSteps}
-                    onChange={(event, newInputValue, reason) => {
-                      _onGenericSectionChange(
-                        event,
-                        newInputValue,
-                        index,
-                        reason
-                      );
-                    }}
-                    onInputChange={(event, newInputValue) => {
-                      _onGenericSectionChange(
-                        event,
-                        newInputValue,
-                        index,
-                        "input-change"
-                      );
-                    }}
-                    renderInput={(params) => (
-                      <StyledAutocompleteTextField
-                        {...params}
-                        name={`productionSteps[${index}].name`}
-                        onClick={_stopPropagation}
-                        onFocus={onFieldFocus}
-                        onBlur={onFieldBlur}
-                        onKeyUp={onKeyUp as any}
-                        variant="standard"
-                        fullWidth
-                      />
-                    )}
                   />
                 </Stack>
                 <ErrorMessage
-                  name={`productionSteps[${index}].name`}
+                  name={getFieldName("name")}
                   render={(message) => (
                     <StyledErrorMessage>{message}</StyledErrorMessage>
                   )}
@@ -374,7 +315,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
                   </StyledStepDescriptionText> */}
                   <Field
                     component={FormikTextarea}
-                    name={`productionSteps[${index}].description`}
+                    name={getFieldName("description")}
                     onClick={_stopPropagation}
                     onFocus={onFieldFocus}
                     onBlur={onFieldBlur}
@@ -383,7 +324,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
                   />
                 </Stack>
                 <ErrorMessage
-                  name={`productionSteps[${index}].description`}
+                  name={getFieldName("name")}
                   render={(message) => (
                     <StyledErrorMessage>{message}</StyledErrorMessage>
                   )}
@@ -405,7 +346,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
         {/* error message while not on hover */}
         {!isHover && hasError(index, "description") && (
           <ErrorMessage
-            name={`productionSteps[${index}].description`}
+            name={getFieldName("description")}
             render={(message) => (
               <StyledErrorMessage>{message}</StyledErrorMessage>
             )}
@@ -428,7 +369,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
         {isHover ? (
           <Stack className="flex1">
             <Field
-              name={`productionSteps[${index}].transformation`}
+              name={getFieldName("transformation")}
               component={FormikSelect}
             >
               {TRANSFORMATION_TYPES.map((transformation) => (
@@ -441,7 +382,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
               ))}
             </Field>
             <ErrorMessage
-              name={`productionSteps[${index}].transformation`}
+              name={getFieldName("transformation")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -449,7 +390,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
           </Stack>
         ) : hasError(index, "transformation") ? (
           <ErrorMessage
-            name={`productionSteps[${index}].transformation`}
+            name={getFieldName("transformation")}
             render={(message) => (
               <StyledErrorMessage>{message}</StyledErrorMessage>
             )}
@@ -474,7 +415,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
         {isHover ? (
           <Stack className="flex1">
             <Field
-              name={`productionSteps[${index}].kitchenArea`}
+              name={getFieldName("kitchenArea")}
               component={FormikAutocomplete}
               options={kitchenAreas}
               isOptionEqualToValue={isPointersOptionEqualToValue}
@@ -482,7 +423,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
               readOnly
             />
             <ErrorMessage
-              name={`productionSteps[${index}].kitchenArea`}
+              name={getFieldName("kitchenArea")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -497,7 +438,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
         {isHover ? (
           <Stack className="flex1">
             <Field
-              name={`productionSteps[${index}].machineType`}
+              name={getFieldName("machineType")}
               component={FormikAutocomplete}
               options={machineTypes}
               isOptionEqualToValue={isPointersOptionEqualToValue}
@@ -505,7 +446,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
               readOnly
             />
             <ErrorMessage
-              name={`productionSteps[${index}].machineType`}
+              name={getFieldName("machineType")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -521,14 +462,14 @@ const EditableSelectedReusableStep: FC<Props> = ({
           <Stack>
             <Field
               component={FormikTextField}
-              name={`productionSteps[${index}].machineSetting`}
+              name={getFieldName("machineSetting")}
               onClick={_stopPropagation}
               onFocus={onFieldFocus}
               onBlur={onFieldBlur}
               onKeyUp={onKeyUp}
             />
             <ErrorMessage
-              name={`productionSteps[${index}].machineSetting`}
+              name={getFieldName("machineSetting")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -536,7 +477,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
           </Stack>
         ) : hasError(index, "machineSetting") ? (
           <ErrorMessage
-            name={`productionSteps[${index}].machineSetting`}
+            name={getFieldName("machineSetting")}
             render={(message) => (
               <StyledErrorMessage>{message}</StyledErrorMessage>
             )}
@@ -552,7 +493,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
             <Field
               type="number"
               component={FormikTextField}
-              name={`productionSteps[${index}].stepDuration`}
+              name={getFieldName("stepDuration")}
               onClick={_stopPropagation}
               onFocus={onFieldFocus}
               onBlur={onFieldBlur}
@@ -560,7 +501,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
               inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
             <ErrorMessage
-              name={`productionSteps[${index}].stepDuration`}
+              name={getFieldName("stepDuration")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -568,7 +509,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
           </Stack>
         ) : hasError(index, "stepDuration") ? (
           <ErrorMessage
-            name={`productionSteps[${index}].stepDuration`}
+            name={getFieldName("stepDuration")}
             render={(message) => (
               <StyledErrorMessage>{message}</StyledErrorMessage>
             )}
@@ -582,7 +523,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
         {isHover ? (
           <Stack className="flex1">
             <Field
-              name={`productionSteps[${index}].stepDurationUnit`}
+              name={getFieldName("stepDurationUnit")}
               component={FormikSelect}
             >
               {STEP_DURATION_UNITS.map((unit, index) => (
@@ -592,7 +533,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
               ))}
             </Field>
             <ErrorMessage
-              name={`productionSteps[${index}].stepDurationUnit`}
+              name={getFieldName("stepDurationUnit")}
               render={(message) => (
                 <StyledErrorMessage>{message}</StyledErrorMessage>
               )}
@@ -600,7 +541,7 @@ const EditableSelectedReusableStep: FC<Props> = ({
           </Stack>
         ) : hasError(index, "stepDurationUnit") ? (
           <ErrorMessage
-            name={`productionSteps[${index}].stepDurationUnit`}
+            name={getFieldName("stepDurationUnit")}
             render={(message) => (
               <StyledErrorMessage>{message}</StyledErrorMessage>
             )}
@@ -625,4 +566,4 @@ const EditableSelectedReusableStep: FC<Props> = ({
   );
 };
 
-export default EditableSelectedReusableStep;
+export default EditableStep02;

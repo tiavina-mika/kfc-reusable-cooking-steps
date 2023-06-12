@@ -23,7 +23,7 @@ const featuresOptions: ISelectOption<IFeature>[] = [
   }
 ];
 const App = () => {
-  const [features, setFeatures] = useState<IFeature>("reusableSteps");
+  const [features, setFeatures] = useState<IFeature>("recipe");
   const [steps, setSteps] = useState([]);
   // simulate page with route
   const [page, setPage] = useState<IPage>("list");
@@ -31,7 +31,6 @@ const App = () => {
     null
   );
 
-  // return <Recipe recipe={recipe} genericSections={sections} />;
   const handleStepCreation = (step) => {
     setSteps((prev) => [step, ...prev]);
     setPage("list");

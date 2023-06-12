@@ -21,7 +21,9 @@ import {
   StyledStepFirstBodyColumn,
   StyledStepText,
   StyledProductionStepsTextarea,
-  StyledStickyLastBodyColumn
+  StyledStickyLastBodyColumn,
+  StyledAutocompleteTextField,
+  StyledAutocomplete
 } from "../StyledSectionComponents";
 import StepNameDescription from "./StepNameDescription";
 import {
@@ -33,8 +35,13 @@ import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   computeStepData,
   getDefaultSteps,
+  parseProductionStepsToObject,
+  parseProductionStepToObject,
+  parseReusableProductionStepToObject,
   STEP_DURATION_UNITS
 } from "../../../utils/recipeUtils";
+import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
+import { computeReusableProductionStepsOnFieldChange } from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
@@ -140,7 +147,11 @@ type Props = {
   ) => void;
   computeReusableStepsFormValues?: (steps: Record<string, any>) => void;
   // onAddStep?: (value: any) => void;
+  onClearFocus: () => void;
   isReusable?: boolean;
+  allReusableSteps?: Record<string, any>[];
+  formValues: Record<string, any>;
+  setValues: any;
 };
 
 const EditableStep: FC<Props> = ({
@@ -166,10 +177,17 @@ const EditableStep: FC<Props> = ({
   kitchenAreas,
   computeStepsFormValues,
   computeReusableStepsFormValues,
-  isReusable
+  isReusable,
+
+  allReusableSteps,
+  onClearFocus,
+  formValues,
+  setValues
+
   // onAddStep,
   // onDeleteBlur
 }) => {
+  // console.log('EdiatbleStep.tsx formValues', formValues)
   const _stopPropagation = (event) => event && event.stopPropagation();
 
   const getFieldName = useCallback(
@@ -241,13 +259,103 @@ const EditableStep: FC<Props> = ({
     _stopPropagation(event);
   };
 
+  const getReusableStepOptionLabel = (option) => {
+    if (typeof option === "string") {
+      return option;
+    }
+
+    if (option.get) {
+      return option.get("name") || option.get("description");
+    }
+
+    return option.name || option.description;
+  };
+
+  // reusable step autocomplete change
+  const handleReusableStepsChange = (
+    event,
+    formValue,
+    sectionIndex,
+    stepIndex,
+    reason
+  ) => {
+    if (!event) return;
+
+    let value = formValue;
+    if (reason === "selectOption") {
+      if (value.get) {
+        value = value.get("name") || value.get("description");
+      } else {
+        value = value.name || value.description;
+      }
+    }
+
+    const step = allReusableSteps.find(
+      (step) => (step.get ? step.get("name") : step.name) === value
+    );
+
+    const newSteps = [...steps];
+
+    newSteps[stepIndex].name = value;
+    newSteps[stepIndex].isReusable = true;
+
+    if (reason === "selectOption" && step) {
+      // const parsedReusableStep = parseReusableProductionStepToObject(step)
+      const newStep =
+        parseReusableProductionStepToObject(step) || getDefaultSteps();
+      newSteps[stepIndex] = newStep;
+      console.log("newStep", newStep);
+
+      newSteps[stepIndex].error = false;
+      newSteps[stepIndex].id = null;
+      // newSteps[stepIndex].parentId = step.id;
+      // newSteps[stepIndex].parentPercent = 100;
+
+      const newFormValues: Record<string, any> = { ...formValues };
+      // newFormValues.productionSteps = newSteps;
+      // newFormValues.name = value?.toUpperCase();
+
+      // newSteps[stepIndex].productionSteps.forEach((step, stepIndex) => {
+      //   step.stepComponents.forEach((_, ingredientIndex) => {
+      //     computeReusableProductionStepsOnFieldChange(
+      //       step,
+      //       stepIndex,
+      //       ingredientIndex
+      //     );
+      //   });
+      // });
+
+      // console.log('newSteps[stepIndex]', newSteps[stepIndex])
+      newFormValues.sections[sectionIndex].productionSteps = newSteps;
+
+      setValues(newFormValues);
+    }
+
+    if (reason === "input-change" && steps) {
+      setFieldValue(`sections[${sectionIndex}].productionStep`, newSteps);
+    }
+
+    // if (section && !newSteps[stepIndex].parentId) {
+    //   newSteps[stepIndex].parentId = null;
+    //   newSteps[sectionIndex].parentPercent = 0;
+    // }
+
+    if (reason === "selectOption" && step) {
+      onClearFocus();
+    }
+
+    if (event.target) {
+      _stopPropagation(event);
+    }
+  };
+
   // change the reusable step name by the last step child name
   const handleNameBlur = (event) => {
     if (isReusable) {
       const lastStep = steps[steps.length - 1];
       const currentStep = steps[index];
       if (currentStep.name && lastStep?.index === currentStep.index) {
-        const name =  steps[index].name
+        const name = steps[index].name;
         setFieldValue("name", name.toUpperCase());
       }
     }
@@ -292,13 +400,56 @@ const EditableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  <Field
+                  {/* <Field
                     component={FormikTextFieldName}
                     name={getFieldName("name")}
                     onClick={_stopPropagation}
                     onFocus={onFieldFocus}
                     onBlur={handleNameBlur}
                     onKeyUp={onKeyUp}
+                  /> */}
+                  <StyledAutocomplete
+                    freeSolo
+                    disableClearable
+                    selectOnFocus
+                    handleHomeEndKeys
+                    inputValue={
+                      typeof step.name === "string"
+                        ? step.name
+                        : step.get("name")
+                    }
+                    getOptionLabel={getReusableStepOptionLabel}
+                    options={allReusableSteps}
+                    onChange={(event, newInputValue, reason) => {
+                      handleReusableStepsChange(
+                        event,
+                        newInputValue,
+                        sectionIndex,
+                        index,
+                        reason
+                      );
+                    }}
+                    onInputChange={(event, newInputValue) => {
+                      handleReusableStepsChange(
+                        event,
+                        newInputValue,
+                        sectionIndex,
+                        index,
+                        "input-change"
+                      );
+                    }}
+                    renderInput={(params) => (
+                      <StyledAutocompleteTextField
+                        {...params}
+                        name={getFieldName("name")}
+                        onClick={_stopPropagation}
+                        onFocus={onFieldFocus}
+                        onBlur={handleNameBlur}
+                        onKeyUp={onKeyUp as any}
+                        variant="standard"
+                        fullWidth
+                      />
+                    )}
                   />
                 </Stack>
                 <ErrorMessage

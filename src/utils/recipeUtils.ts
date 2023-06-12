@@ -362,29 +362,54 @@ export const parseStepsToObject = (steps, percent = false) => {
   });
 };
 
+export const parseProductionStepToObject = (step, percent = false) => {
+  return {
+    objectId: step.objectId,
+    name: step.name || "",
+    index: step.index || uuidv4(),
+    description: step.description || "",
+    stepComponents: step.stepComponents
+      ? parseIngredientsListToObject(step.stepComponents, percent)
+      : [getDefaultIngredients()],
+    error: step.description && step.description !== "" ? false : true,
+    grossWeight:
+      false !== percent
+        ? step.grossWeight || 0
+        : ((step.grossWeight || 0) * (percent as any)) / 100,
+    preventGrossWeightChange: true,
+    kitchenArea: step.kitchenArea || null,
+    transformation: step.transformation || "",
+    machineType: step.machineType || null,
+    machineSetting: step.machineSetting || "",
+    stepDuration: step.stepDuration || 0,
+    stepDurationUnit: step.stepDurationUnit || "",
+  };
+};
+
 export const parseProductionStepsToObject = (steps, percent = false) => {
   return steps.map((step) => {
-    return {
-      objectId: step.objectId,
-      name: step.name || "",
-      index: step.index || uuidv4(),
-      description: step.description || "",
-      stepComponents: step.stepComponents
-        ? parseIngredientsListToObject(step.stepComponents, percent)
-        : [getDefaultIngredients()],
-      error: step.description && step.description !== "" ? false : true,
-      grossWeight:
-        false !== percent
-          ? step.grossWeight || 0
-          : ((step.grossWeight || 0) * (percent as any)) / 100,
-      preventGrossWeightChange: true,
-      kitchenArea: step.kitchenArea || null,
-      transformation: step.transformation || "",
-      machineType: step.machineType || null,
-      machineSetting: step.machineSetting || "",
-      stepDuration: step.stepDuration || 0,
-      stepDurationUnit: step.stepDurationUnit || ""
-    };
+    return parseProductionStepToObject(step, percent)
+  });
+};
+
+export const parseReusableProductionStepToObject = (step, percent = false) => ({
+  objectId: step.objectId,
+  name: step.name || "",
+  index: step.index || uuidv4(),
+  isReusable: true,
+  error: step.description && step.description !== "" ? false : true,
+  productionSteps: step.productionSteps
+    ? parseProductionStepsToObject(step.productionSteps, percent)
+    : [],
+  // grossWeight:
+  //   false !== percent
+  //     ? step.grossWeight || 0
+  //     : ((step.grossWeight || 0) * (percent as any)) / 100,
+});
+
+export const parseReusableProductionStepsToObject = (steps, percent = false) => {
+  return steps.map((step) => {
+    return parseReusableProductionStepToObject(step, percent);
   });
 };
 

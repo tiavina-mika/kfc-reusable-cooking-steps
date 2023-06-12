@@ -253,6 +253,9 @@ const Sections: FC<Props> = ({
               computeStepsFormValues={computeStepsFormValues}
               hasError={_hasStepError}
               isReusable={false}
+              onClearFocus={onClearFocus}
+              formValues={formValues}
+              setValues={setValues}
               // onKeyDown={(e) => _onKeyDown(e, section)}
             />
           </AccordionDetails>

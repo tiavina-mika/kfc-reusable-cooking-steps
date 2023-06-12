@@ -9,6 +9,7 @@ import {
   Box
 } from "@mui/material";
 
+import { reusableSteps } from "../../../utils/data/reusableSteps";
 import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
@@ -84,7 +85,6 @@ type Props = {
   onRowBlur: () => void;
   hoveredRow: IHoveredRow;
   // genericSections?: Record<string, any>[];
-  // onClearFocus: () => void;
   onFieldFocus: () => void;
   onFieldBlur: any;
   onKeyUp: (event: any, setFieldTouched: any) => void;
@@ -107,6 +107,10 @@ type Props = {
   ) => void;
   computeReusableStepsFormValues?: (steps: Record<string, any>) => void;
   isReusable?: boolean;
+
+  formValues?: Record<string, any>;
+  setValues?: any;
+  onClearFocus?: () => void;
 };
 
 const Steps: FC<Props> = ({
@@ -131,7 +135,11 @@ const Steps: FC<Props> = ({
   computeStepsFormValues,
   computeReusableStepsFormValues,
   hasError,
-  isReusable
+  isReusable,
+
+  setValues,
+  formValues,
+  onClearFocus
   // onDeleteBlur
 }) => {
   // do not display steps row in preview if it's empty
@@ -191,7 +199,6 @@ const Steps: FC<Props> = ({
                   // isDeleteHover={_isDeleteHover(index)}
                   // genericSections={genericSections}
                   setFieldValue={setFieldValue}
-                  // onClearFocus={onClearFocus}
                   onFieldFocus={onFieldFocus}
                   onFieldBlur={onFieldBlur}
                   onKeyUp={onKeyUp}
@@ -205,6 +212,10 @@ const Steps: FC<Props> = ({
                   }
                   // onAddStep={handleAddStep}
                   isReusable={isReusable}
+                  allReusableSteps={reusableSteps}
+                  onClearFocus={onClearFocus}
+                  setValues={setValues}
+                  formValues={formValues}
                 />
               ) : (
                 <StepPreview step={step} index={index} />
