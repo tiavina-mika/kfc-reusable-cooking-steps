@@ -80,6 +80,7 @@ const EditableReusableSteps: FC<Props> = ({
       hasError={_hasError}
       computeReusableStepsFormValues={computeReusableStepsFormValues}
       isReusable
+      fromRecipe={false}
       // onKeyDown={(e) => _onKeyDown(e, section)}
     />
   );

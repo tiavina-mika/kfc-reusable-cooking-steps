@@ -152,6 +152,7 @@ type Props = {
   allReusableSteps?: Record<string, any>[];
   formValues: Record<string, any>;
   setValues: any;
+  fromRecipe?: boolean;
 };
 
 const EditableStep: FC<Props> = ({
@@ -182,7 +183,8 @@ const EditableStep: FC<Props> = ({
   allReusableSteps,
   onClearFocus,
   formValues,
-  setValues
+  setValues,
+  fromRecipe
 
   // onAddStep,
   // onDeleteBlur
@@ -218,16 +220,24 @@ const EditableStep: FC<Props> = ({
     if (newStep) {
       computeStepData(newStep, "stepComponents");
     }
-    if (isReusable) {
+
+    if (fromRecipe) {
+      setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
+    } else {
       setFieldValue("productionSteps", newSteps);
+    }
+    // reusable step
+    if (isReusable) {
+      // setFieldValue("productionSteps", newSteps);
 
       const newLastStep = newSteps[newSteps.length - 1];
       if (newLastStep) {
         setFieldValue("name", newLastStep?.name?.toUpperCase());
       }
-    } else {
-      setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
     }
+    // else {
+    //   setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
+    // }
     // setFieldValue(`sections[${sectionIndex}].productionSteps`, newSteps);
     _stopPropagation(event);
   };
@@ -400,6 +410,60 @@ const EditableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
+                  {fromRecipe ? (
+                    <StyledAutocomplete
+                      freeSolo
+                      disableClearable
+                      selectOnFocus
+                      handleHomeEndKeys
+                      inputValue={
+                        typeof step.name === "string"
+                          ? step.name
+                          : step.get("name")
+                      }
+                      getOptionLabel={getReusableStepOptionLabel}
+                      options={allReusableSteps}
+                      onChange={(event, newInputValue, reason) => {
+                        handleReusableStepsChange(
+                          event,
+                          newInputValue,
+                          sectionIndex,
+                          index,
+                          reason
+                        );
+                      }}
+                      onInputChange={(event, newInputValue) => {
+                        handleReusableStepsChange(
+                          event,
+                          newInputValue,
+                          sectionIndex,
+                          index,
+                          "input-change"
+                        );
+                      }}
+                      renderInput={(params) => (
+                        <StyledAutocompleteTextField
+                          {...params}
+                          name={getFieldName("name")}
+                          onClick={_stopPropagation}
+                          onFocus={onFieldFocus}
+                          onBlur={handleNameBlur}
+                          onKeyUp={onKeyUp as any}
+                          variant="standard"
+                          fullWidth
+                        />
+                      )}
+                    />
+                  ) : (
+                    <Field
+                      component={FormikTextFieldName}
+                      name={getFieldName("name")}
+                      onClick={_stopPropagation}
+                      onFocus={onFieldFocus}
+                      onBlur={handleNameBlur}
+                      onKeyUp={onKeyUp}
+                    />
+                  )}
                   {/* <Field
                     component={FormikTextFieldName}
                     name={getFieldName("name")}
@@ -408,49 +472,6 @@ const EditableStep: FC<Props> = ({
                     onBlur={handleNameBlur}
                     onKeyUp={onKeyUp}
                   /> */}
-                  <StyledAutocomplete
-                    freeSolo
-                    disableClearable
-                    selectOnFocus
-                    handleHomeEndKeys
-                    inputValue={
-                      typeof step.name === "string"
-                        ? step.name
-                        : step.get("name")
-                    }
-                    getOptionLabel={getReusableStepOptionLabel}
-                    options={allReusableSteps}
-                    onChange={(event, newInputValue, reason) => {
-                      handleReusableStepsChange(
-                        event,
-                        newInputValue,
-                        sectionIndex,
-                        index,
-                        reason
-                      );
-                    }}
-                    onInputChange={(event, newInputValue) => {
-                      handleReusableStepsChange(
-                        event,
-                        newInputValue,
-                        sectionIndex,
-                        index,
-                        "input-change"
-                      );
-                    }}
-                    renderInput={(params) => (
-                      <StyledAutocompleteTextField
-                        {...params}
-                        name={getFieldName("name")}
-                        onClick={_stopPropagation}
-                        onFocus={onFieldFocus}
-                        onBlur={handleNameBlur}
-                        onKeyUp={onKeyUp as any}
-                        variant="standard"
-                        fullWidth
-                      />
-                    )}
-                  />
                 </Stack>
                 <ErrorMessage
                   name={getFieldName("name")}

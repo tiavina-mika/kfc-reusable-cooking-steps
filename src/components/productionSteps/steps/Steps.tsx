@@ -14,6 +14,7 @@ import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
 import { IHoveredRow } from "../sections/Sections";
+import ReusableStepFormRow from "../../reusableSteps/ReusableStepFormRow";
 
 export const COMPONENT_NAME = "STEPS";
 
@@ -111,6 +112,7 @@ type Props = {
   formValues?: Record<string, any>;
   setValues?: any;
   onClearFocus?: () => void;
+  fromRecipe?: boolean;
 };
 
 const Steps: FC<Props> = ({
@@ -139,7 +141,8 @@ const Steps: FC<Props> = ({
 
   setValues,
   formValues,
-  onClearFocus
+  onClearFocus,
+  fromRecipe = true
   // onDeleteBlur
 }) => {
   // do not display steps row in preview if it's empty
@@ -178,7 +181,7 @@ const Steps: FC<Props> = ({
     <Box className="flexColumn" sx={{ position: "relative" }}>
       {steps.map((step, index) => (
         <Fragment key={index}>
-          {isReusable && <StyledLeftBar />}
+          {(step.isReusable || isReusable) && <StyledLeftBar />}
           <StyledAccordion elevation={0} defaultExpanded square disableGutters>
             <StyledAccordionSummary
               expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
@@ -188,35 +191,59 @@ const Steps: FC<Props> = ({
               onMouseLeave={onRowBlur}
             >
               {isEdition ? (
-                <EditableStep
-                  steps={steps}
-                  step={step}
-                  index={index}
-                  isEdition={isEdition}
-                  // index={index}
-                  isHover={_isHover(index)}
-                  sectionIndex={sectionIndex}
-                  // isDeleteHover={_isDeleteHover(index)}
-                  // genericSections={genericSections}
-                  setFieldValue={setFieldValue}
-                  onFieldFocus={onFieldFocus}
-                  onFieldBlur={onFieldBlur}
-                  onKeyUp={onKeyUp}
-                  // onDeleteBlur={onDeleteBlur}
-                  hasError={_hasError}
-                  machineTypes={machineTypes}
-                  kitchenAreas={kitchenAreas}
-                  computeStepsFormValues={computeStepsFormValues}
-                  computeReusableStepsFormValues={
-                    computeReusableStepsFormValues
-                  }
-                  // onAddStep={handleAddStep}
-                  isReusable={isReusable}
-                  allReusableSteps={reusableSteps}
-                  onClearFocus={onClearFocus}
-                  setValues={setValues}
-                  formValues={formValues}
-                />
+                step.isReusable ? (
+                  <ReusableStepFormRow
+                    onRowHover={onRowHover}
+                    onRowBlur={onRowBlur}
+                    hoveredRow={hoveredRow}
+                    onFieldFocus={onFieldFocus}
+                    onFieldBlur={onFieldBlur}
+                    onKeyUp={onKeyUp}
+                    errors={errors}
+                    machineTypes={machineTypes}
+                    kitchenAreas={kitchenAreas}
+                    setFieldValue={setFieldValue}
+                    stepValues={
+                      formValues.sections[sectionIndex].productionSteps[
+                        index
+                      ] || []
+                    }
+                    // stepValues={values.productionSteps || []}
+                    setValues={setValues}
+                  />
+                ) : (
+                  <EditableStep
+                    steps={steps}
+                    step={step}
+                    index={index}
+                    isEdition={isEdition}
+                    // index={index}
+                    isHover={_isHover(index)}
+                    sectionIndex={sectionIndex}
+                    // isDeleteHover={_isDeleteHover(index)}
+                    // genericSections={genericSections}
+                    setFieldValue={setFieldValue}
+                    onFieldFocus={onFieldFocus}
+                    onFieldBlur={onFieldBlur}
+                    onKeyUp={onKeyUp}
+                    // onDeleteBlur={onDeleteBlur}
+                    hasError={_hasError}
+                    machineTypes={machineTypes}
+                    kitchenAreas={kitchenAreas}
+                    computeStepsFormValues={computeStepsFormValues}
+                    computeReusableStepsFormValues={
+                      computeReusableStepsFormValues
+                    }
+                    // onAddStep={handleAddStep}
+                    isReusable={isReusable}
+                    // isReusable={isReusable}
+                    allReusableSteps={reusableSteps}
+                    onClearFocus={onClearFocus}
+                    setValues={setValues}
+                    formValues={formValues}
+                    fromRecipe={fromRecipe}
+                  />
+                )
               ) : (
                 <StepPreview step={step} index={index} />
               )}
