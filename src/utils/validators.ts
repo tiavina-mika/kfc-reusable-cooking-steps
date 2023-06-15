@@ -7,7 +7,12 @@ export const RecipeProductionStepsSchema = Yup.object().shape({
       productionSteps: Yup.array().of(
         Yup.object().shape({
           name: Yup.string(),
-          description: Yup.string().required("Obligatoire"),
+          // description: Yup.string().required("Obligatoire"),
+          description: Yup.string().when("isReusable", {
+            is: (val) => !val,
+            then: (schema) => schema.required("Obligatoire")
+          }),
+
           machineSetting: Yup.string(),
           transformation: Yup.string(),
           stepDurationUnit: Yup.string(),

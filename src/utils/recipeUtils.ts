@@ -226,7 +226,8 @@ export function getDefaultSteps() {
     description: "",
     ingredients: [getDefaultIngredients()],
     stepComponents: [getDefaultStepComponents()],
-    error: true
+    error: true,
+    isEmpty: true
   };
 }
 
@@ -382,13 +383,13 @@ export const parseProductionStepToObject = (step, percent = false) => {
     machineType: step.machineType || null,
     machineSetting: step.machineSetting || "",
     stepDuration: step.stepDuration || 0,
-    stepDurationUnit: step.stepDurationUnit || "",
+    stepDurationUnit: step.stepDurationUnit || ""
   };
 };
 
 export const parseProductionStepsToObject = (steps, percent = false) => {
   return steps.map((step) => {
-    return parseProductionStepToObject(step, percent)
+    return parseProductionStepToObject(step, percent);
   });
 };
 
@@ -400,14 +401,17 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
   error: step.description && step.description !== "" ? false : true,
   productionSteps: step.productionSteps
     ? parseProductionStepsToObject(step.productionSteps, percent)
-    : [],
+    : []
   // grossWeight:
   //   false !== percent
   //     ? step.grossWeight || 0
   //     : ((step.grossWeight || 0) * (percent as any)) / 100,
 });
 
-export const parseReusableProductionStepsToObject = (steps, percent = false) => {
+export const parseReusableProductionStepsToObject = (
+  steps,
+  percent = false
+) => {
   return steps.map((step) => {
     return parseReusableProductionStepToObject(step, percent);
   });
@@ -677,7 +681,7 @@ export const getReusableFormInitialValues = (step: Record<string, any>) => {
   const productionSteps = step
     ? parseProductionStepsToObject(step.productionSteps)
     : [getDefaultSteps()];
-  
+
   const values: Record<string, any> = {
     productionSteps,
     name: step ? step.name : ""

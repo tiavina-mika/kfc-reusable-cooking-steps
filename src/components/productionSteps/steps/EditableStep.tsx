@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, Fragment, useCallback } from "react";
 
 import {
   Autocomplete,
@@ -35,13 +35,9 @@ import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   computeStepData,
   getDefaultSteps,
-  parseProductionStepsToObject,
-  parseProductionStepToObject,
   parseReusableProductionStepToObject,
   STEP_DURATION_UNITS
 } from "../../../utils/recipeUtils";
-import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
-import { computeReusableProductionStepsOnFieldChange } from "../../../utils/recipeUtils";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
@@ -189,7 +185,7 @@ const EditableStep: FC<Props> = ({
   // onAddStep,
   // onDeleteBlur
 }) => {
-  // console.log('EdiatbleStep.tsx formValues', formValues)
+  // console.log('EdiatbleStep step', step)
   const _stopPropagation = (event) => event && event.stopPropagation();
 
   const getFieldName = useCallback(
@@ -314,9 +310,9 @@ const EditableStep: FC<Props> = ({
       const newStep =
         parseReusableProductionStepToObject(step) || getDefaultSteps();
       newSteps[stepIndex] = newStep;
-      console.log("newStep", newStep);
 
       newSteps[stepIndex].error = false;
+      newSteps[stepIndex].isEmpty = false;
       newSteps[stepIndex].id = null;
       // newSteps[stepIndex].parentId = step.id;
       // newSteps[stepIndex].parentPercent = 100;
@@ -410,7 +406,7 @@ const EditableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  {fromRecipe ? (
+                  {fromRecipe && (step.isReusable || step.isEmpty) ? (
                     <StyledAutocomplete
                       freeSolo
                       disableClearable
@@ -455,14 +451,22 @@ const EditableStep: FC<Props> = ({
                       )}
                     />
                   ) : (
-                    <Field
-                      component={FormikTextFieldName}
-                      name={getFieldName("name")}
-                      onClick={_stopPropagation}
-                      onFocus={onFieldFocus}
-                      onBlur={handleNameBlur}
-                      onKeyUp={onKeyUp}
-                    />
+                    <Fragment>
+                      <Field
+                        component={FormikTextFieldName}
+                        name={getFieldName("name")}
+                        onClick={_stopPropagation}
+                        onFocus={onFieldFocus}
+                        onBlur={handleNameBlur}
+                        onKeyUp={onKeyUp}
+                      />
+                      <ErrorMessage
+                        name={getFieldName("name")}
+                        render={(message) => (
+                          <StyledErrorMessage>{message}</StyledErrorMessage>
+                        )}
+                      />
+                    </Fragment>
                   )}
                   {/* <Field
                     component={FormikTextFieldName}
@@ -473,12 +477,6 @@ const EditableStep: FC<Props> = ({
                     onKeyUp={onKeyUp}
                   /> */}
                 </Stack>
-                <ErrorMessage
-                  name={getFieldName("name")}
-                  render={(message) => (
-                    <StyledErrorMessage>{message}</StyledErrorMessage>
-                  )}
-                />
               </Stack>
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">

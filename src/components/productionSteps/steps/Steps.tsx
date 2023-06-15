@@ -196,7 +196,6 @@ const Steps: FC<Props> = ({
               stepValues={
                 formValues.sections[sectionIndex].productionSteps[index] || []
               }
-              // stepValues={values.productionSteps || []}
               setValues={setValues}
             />
           ) : (
