@@ -8,6 +8,7 @@ import ReusableStepForm from "./components/reusableSteps/ReusableStepForm";
 import ReusableProductionSteps from "./components/reusableSteps/ReusableProductionSteps";
 import { recipe } from "./utils/data/recipe";
 import { sections } from "./utils/data/section";
+import { reusableSteps } from "./utils/data/reusableSteps";
 
 type IPage = "form" | "list";
 type IFeature = "reusableSteps" | "recipe";
@@ -24,7 +25,7 @@ const featuresOptions: ISelectOption<IFeature>[] = [
 ];
 const App = () => {
   const [features, setFeatures] = useState<IFeature>("recipe");
-  const [steps, setSteps] = useState([]);
+  const [steps, setSteps] = useState(reusableSteps);
   // simulate page with route
   const [page, setPage] = useState<IPage>("list");
   const [selectedStep, setSelectedStep] = useState<Record<string, any> | null>(
