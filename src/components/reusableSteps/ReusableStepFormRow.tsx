@@ -1,8 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 
 import ReusableStepParent from "./form/ReusableStepParent";
 import EditableReusableSteps from "./form/EditableReusableSteps";
 import { IHoveredRow } from "../productionSteps/sections/Sections";
+import { computeReusableProductionStepsOnFieldChange } from "../../utils/recipeUtils";
+import Steps from "../productionSteps/steps/Steps";
 
 type Props = {
   stepValues?: Record<string, any>;
@@ -32,6 +34,30 @@ const ReusableStepFormRow: FC<Props> = ({
   machineTypes,
   kitchenAreas
 }) => {
+  const computeReusableStepsFormValues = useCallback(
+    (steps: Record<string, any>) => {
+      const newFormValues = { ...stepValues };
+
+      steps.forEach((step, stepIndex) => {
+        step.stepComponents.forEach((_, ingredientIndex) => {
+          computeReusableProductionStepsOnFieldChange(
+            newFormValues,
+            stepIndex,
+            ingredientIndex
+          );
+        });
+      });
+
+      newFormValues.productionSteps = steps;
+      setValues(newFormValues);
+    },
+    [stepValues, setValues]
+  );
+
+  const _hasError = (index: number, field: string) => {
+    return errors.productionSteps?.[index]?.[field];
+  };
+
   return (
     <>
       <ReusableStepParent
@@ -40,7 +66,9 @@ const ReusableStepFormRow: FC<Props> = ({
         onRowHover={onRowHover}
         onRowBlur={onRowBlur}
       />
-      <EditableReusableSteps
+      <Steps
+        steps={stepValues?.productionSteps || []}
+        isEdition
         hoveredRow={hoveredRow}
         onFieldFocus={onFieldFocus}
         onFieldBlur={onFieldBlur}
@@ -51,9 +79,10 @@ const ReusableStepFormRow: FC<Props> = ({
         machineTypes={machineTypes}
         kitchenAreas={kitchenAreas}
         setFieldValue={setFieldValue}
-        formValues={stepValues}
-        setValues={setValues}
-        // computeStepsFormValues={computeStepsFormValues}
+        hasError={_hasError}
+        computeReusableStepsFormValues={computeReusableStepsFormValues}
+        isReusable
+        fromRecipe={false}
       />
     </>
   );
