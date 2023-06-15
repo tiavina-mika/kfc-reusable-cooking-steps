@@ -181,74 +181,81 @@ const Steps: FC<Props> = ({
     <Box className="flexColumn" sx={{ position: "relative" }}>
       {steps.map((step, index) => (
         <Fragment key={index}>
-          {(step.isReusable || isReusable) && <StyledLeftBar />}
-          <StyledAccordion elevation={0} defaultExpanded square disableGutters>
-            <StyledAccordionSummary
-              expandIcon={<img alt="chevron" src="/icons/chevron-down.svg" />}
-              onMouseEnter={() =>
-                onRowHover(COMPONENT_NAME, index, sectionIndex)
+          {step.isReusable ? (
+            <ReusableStepFormRow
+              onRowHover={onRowHover}
+              onRowBlur={onRowBlur}
+              hoveredRow={hoveredRow}
+              onFieldFocus={onFieldFocus}
+              onFieldBlur={onFieldBlur}
+              onKeyUp={onKeyUp}
+              errors={errors}
+              machineTypes={machineTypes}
+              kitchenAreas={kitchenAreas}
+              setFieldValue={setFieldValue}
+              stepValues={
+                formValues.sections[sectionIndex].productionSteps[index] || []
               }
-              onMouseLeave={onRowBlur}
-            >
-              {isEdition ? (
-                step.isReusable ? (
-                  <ReusableStepFormRow
-                    onRowHover={onRowHover}
-                    onRowBlur={onRowBlur}
-                    hoveredRow={hoveredRow}
-                    onFieldFocus={onFieldFocus}
-                    onFieldBlur={onFieldBlur}
-                    onKeyUp={onKeyUp}
-                    errors={errors}
-                    machineTypes={machineTypes}
-                    kitchenAreas={kitchenAreas}
-                    setFieldValue={setFieldValue}
-                    stepValues={
-                      formValues.sections[sectionIndex].productionSteps[
-                        index
-                      ] || []
-                    }
-                    // stepValues={values.productionSteps || []}
-                    setValues={setValues}
-                  />
-                ) : (
-                  <EditableStep
-                    steps={steps}
-                    step={step}
-                    index={index}
-                    isEdition={isEdition}
-                    // index={index}
-                    isHover={_isHover(index)}
-                    sectionIndex={sectionIndex}
-                    // isDeleteHover={_isDeleteHover(index)}
-                    // genericSections={genericSections}
-                    setFieldValue={setFieldValue}
-                    onFieldFocus={onFieldFocus}
-                    onFieldBlur={onFieldBlur}
-                    onKeyUp={onKeyUp}
-                    // onDeleteBlur={onDeleteBlur}
-                    hasError={_hasError}
-                    machineTypes={machineTypes}
-                    kitchenAreas={kitchenAreas}
-                    computeStepsFormValues={computeStepsFormValues}
-                    computeReusableStepsFormValues={
-                      computeReusableStepsFormValues
-                    }
-                    // onAddStep={handleAddStep}
-                    isReusable={isReusable}
-                    // isReusable={isReusable}
-                    allReusableSteps={reusableSteps}
-                    onClearFocus={onClearFocus}
-                    setValues={setValues}
-                    formValues={formValues}
-                    fromRecipe={fromRecipe}
-                  />
-                )
-              ) : (
-                <StepPreview step={step} index={index} />
-              )}
-            </StyledAccordionSummary>
-          </StyledAccordion>
+              // stepValues={values.productionSteps || []}
+              setValues={setValues}
+            />
+          ) : (
+            <>
+              {isReusable && <StyledLeftBar />}
+              <StyledAccordion
+                elevation={0}
+                defaultExpanded
+                square
+                disableGutters
+              >
+                <StyledAccordionSummary
+                  expandIcon={
+                    <img alt="chevron" src="/icons/chevron-down.svg" />
+                  }
+                  onMouseEnter={() =>
+                    onRowHover(COMPONENT_NAME, index, sectionIndex)
+                  }
+                  onMouseLeave={onRowBlur}
+                >
+                  {isEdition ? (
+                    <EditableStep
+                      steps={steps}
+                      step={step}
+                      index={index}
+                      isEdition={isEdition}
+                      // index={index}
+                      isHover={_isHover(index)}
+                      sectionIndex={sectionIndex}
+                      // isDeleteHover={_isDeleteHover(index)}
+                      // genericSections={genericSections}
+                      setFieldValue={setFieldValue}
+                      onFieldFocus={onFieldFocus}
+                      onFieldBlur={onFieldBlur}
+                      onKeyUp={onKeyUp}
+                      // onDeleteBlur={onDeleteBlur}
+                      hasError={_hasError}
+                      machineTypes={machineTypes}
+                      kitchenAreas={kitchenAreas}
+                      computeStepsFormValues={computeStepsFormValues}
+                      computeReusableStepsFormValues={
+                        computeReusableStepsFormValues
+                      }
+                      // onAddStep={handleAddStep}
+                      isReusable={isReusable}
+                      // isReusable={isReusable}
+                      allReusableSteps={reusableSteps}
+                      onClearFocus={onClearFocus}
+                      setValues={setValues}
+                      formValues={formValues}
+                      fromRecipe={fromRecipe}
+                    />
+                  ) : (
+                    <StepPreview step={step} index={index} />
+                  )}
+                </StyledAccordionSummary>
+              </StyledAccordion>
+            </>
+          )}
         </Fragment>
       ))}
     </Box>

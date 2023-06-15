@@ -32,7 +32,6 @@ const ReusableStepFormRow: FC<Props> = ({
   machineTypes,
   kitchenAreas
 }) => {
-  console.log("ReusableStepFormRow stepValues", stepValues);
   return (
     <>
       <ReusableStepParent
