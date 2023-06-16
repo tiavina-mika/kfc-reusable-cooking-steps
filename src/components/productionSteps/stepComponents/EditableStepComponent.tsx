@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useMemo, useRef } from "react";
 
 import { ErrorMessage, Field } from "formik";
 import {
@@ -131,10 +131,12 @@ type Props = {
   indexStep: number;
   sectionIndex: number;
   supplierItems: Record<string, any>[];
-  isHover: (indexComponent: number, index: number) => void;
+  isHover: boolean;
   hasError: (index: number, field: string) => boolean;
   handleChange: any;
   setFieldValue: any;
+  isStepReusabe?: boolean;
+  fromRecipe?: boolean;
 };
 
 const EditableStepComponent = ({
@@ -150,6 +152,7 @@ const EditableStepComponent = ({
   isHover,
   hasError,
   handleChange,
+  fromRecipe,
   setFieldValue
 }: Props) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
@@ -194,13 +197,23 @@ const EditableStepComponent = ({
     handleChange(event);
   };
 
-  const _addStepComponent = (indexComponent, event = null) => {
+  const _addStepComponent = (index: number, event = null) => {
     const newStepComponents = [...stepComponents];
-    newStepComponents.splice(indexComponent + 1, 0, getEmptyStepComponent());
-    setFieldValue(
-      `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents`,
-      newStepComponents
-    );
+
+    newStepComponents.splice(index + 1, 0, getEmptyStepComponent());
+
+    if (fromRecipe) {
+      setFieldValue(
+        `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents`,
+        newStepComponents
+      );
+    } else {
+      setFieldValue(
+        `productionSteps[${indexStep}].stepComponents`,
+        newStepComponents
+      );
+    }
+
     _stopPropagation(event);
   };
 
@@ -228,35 +241,33 @@ const EditableStepComponent = ({
 
   let transformationModesOptions = getTransformationModeAvailable();
 
-  const onChangeAutocomplete = (newValue) => {
+  const onChangeAutocomplete = useRef((newValue) => {
     stepComponent = resetStepComponent(stepComponent);
     newValue.data.id = newValue.data.objectId;
+    const priorStepFieldName = fromRecipe
+      ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`
+      : `productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`;
+
+    const supplierItemFieldName = fromRecipe
+      ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`
+      : `productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`;
+
     if (newValue.categoryId === "PRIOR_STEPS") {
       stepComponent.priorSteps = newValue.data;
-      setFieldValue(
-        `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`,
-        newValue.data
-      );
-      setFieldValue(
-        `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`,
-        null
-      );
-    } else {
-      supplierItem = newValue.data;
-      stepComponent.supplierItem = supplierItem;
-      setFieldValue(
-        `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`,
-        null
-      );
-      setFieldValue(
-        `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`,
-        newValue.data
-      );
-      stepComponent = recalculateCostValues(stepComponent);
-    }
-  };
+      setFieldValue(priorStepFieldName, newValue.data);
 
-  const searchingSupplier = React.useRef(
+      setFieldValue(supplierItemFieldName, null);
+      return;
+    }
+
+    supplierItem = newValue.data;
+    stepComponent.supplierItem = supplierItem;
+    setFieldValue(priorStepFieldName, null);
+    setFieldValue(supplierItemFieldName, newValue.data);
+    stepComponent = recalculateCostValues(stepComponent);
+  }).current;
+
+  const searchingSupplier = useRef(
     debounce(async (event) => {
       if (event && event.type === "change") {
         setLoading(true);
@@ -279,10 +290,22 @@ const EditableStepComponent = ({
     }, 700)
   ).current;
 
-  const stepComponentArticleFormName = stepComponent.supplierItem
-    ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`
-    : `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`;
-  const stepComponentTransformationModeName = `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`;
+  const stepComponentArticleFormName = useMemo(() => {
+    if (fromRecipe) {
+      return stepComponent.supplierItem
+        ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`
+        : `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`;
+    }
+    return stepComponent.supplierItem
+      ? `productionSteps[${indexStep}].stepComponents[${indexComponent}].supplierItem`
+      : `productionSteps[${indexStep}].stepComponents[${indexComponent}].priorSteps`;
+  }, [fromRecipe, indexStep, indexComponent, sectionIndex, stepComponent]);
+
+  const stepComponentTransformationModeName = useMemo(() => {
+    return fromRecipe
+      ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`
+      : `productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`;
+  }, [fromRecipe, sectionIndex, indexComponent, indexStep]);
 
   return (
     <Box

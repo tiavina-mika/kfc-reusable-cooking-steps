@@ -9,7 +9,6 @@ import {
   Box
 } from "@mui/material";
 
-import { reusableSteps } from "../../../utils/data/reusableSteps";
 import { COLORS, PRODUCTION_STEPS_SPACINGS } from "../../../utils/constant";
 import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
@@ -181,7 +180,11 @@ const Steps = ({
   );
 
   const _isStepComponentHover = useCallback(
-    (index, componentIndex, subComponentIndex) => {
+    (
+      index: number,
+      componentIndex: number,
+      subComponentIndex?: number
+    ): boolean => {
       if (hoveredRow) {
         if (PRODUCTION_STEPS_COMPONENT_NAME === hoveredRow.component) {
           // from recipe BO
@@ -345,6 +348,7 @@ const Steps = ({
                               transformationModes={transformationModes}
                               handleChange={handleChange}
                               setFieldValue={setFieldValue}
+                              fromRecipe={fromRecipe}
                               isHover={_isStepComponentHover(
                                 index,
                                 indexComponent
@@ -399,6 +403,7 @@ const Steps = ({
                               transformationModes={transformationModes}
                               handleChange={handleChange}
                               setFieldValue={setFieldValue}
+                              fromRecipe={fromRecipe}
                               isHover={_isStepComponentHover(
                                 index,
                                 indexComponent
