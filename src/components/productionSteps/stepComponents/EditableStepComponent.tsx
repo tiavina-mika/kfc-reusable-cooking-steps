@@ -131,7 +131,7 @@ type Props = {
   indexStep: number;
   sectionIndex: number;
   supplierItems: Record<string, any>[];
-  isHover: boolean;
+  isHover: (indexComponent: number, index: number) => void;
   hasError: (index: number, field: string) => boolean;
   handleChange: any;
   setFieldValue: any;
