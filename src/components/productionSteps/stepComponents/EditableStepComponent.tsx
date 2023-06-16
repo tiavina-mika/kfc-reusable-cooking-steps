@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 
 import { ErrorMessage, Field } from "formik";
 import {
@@ -79,12 +79,12 @@ const FormikAutocomplete = ({
             ...params.InputProps,
             // readOnly,
             endAdornment: (
-              <React.Fragment>
+              <>
                 {loading ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             )
           }}
         />
@@ -111,7 +111,7 @@ export const FormikEditableStepSelect = ({
           {...params}
           variant="standard"
           fullWidth
-          inputProps={{ ...params.inputProps, readOnly }}
+          InputProps={{ ...params.inputProps, readOnly }}
           sx={readOnly ? autocompleteSx.textField : null}
         />
       )}
@@ -184,7 +184,8 @@ const EditableStepComponent = ({
 
     setPriorSteps(priorSteps);
     setSupplierItemsOptions([...priorSteps, ...supplierItemsOptions]);
-  }, [steps, stepComponent.index, supplierItemsOptions]);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [steps]);
 
   let supplierItem = stepComponent.supplierItem;
   const updateNetWeight = (event) => {
