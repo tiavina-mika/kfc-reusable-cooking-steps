@@ -158,37 +158,69 @@ const Steps = ({
   allReusableSteps,
   fromRecipe = true
 }: Props) => {
-  const _isStepHover = (index) => {
-    return (
-      hoveredRow &&
-      COMPONENT_NAME === hoveredRow.component &&
-      hoveredRow.index === index &&
-      hoveredRow.parentIndex === sectionIndex
-    );
-  };
-
-  const _isStepComponentHover = (index, componentIndex, subComponentIndex) => {
-    if (hoveredRow) {
-      if (PRODUCTION_STEPS_COMPONENT_NAME === hoveredRow.component) {
+  const _isStepHover = useCallback(
+    (index) => {
+      // from recipe BO
+      if (fromRecipe) {
         return (
+          hoveredRow &&
+          COMPONENT_NAME === hoveredRow.component &&
           hoveredRow.index === index &&
-          hoveredRow.parentIndex === sectionIndex &&
-          hoveredRow.componentIndex === componentIndex
-        );
-      } else if (
-        PRODUCTION_STEPS_PRIOR_COMPONENT_NAME === hoveredRow.component
-      ) {
-        return (
-          hoveredRow.index === index &&
-          hoveredRow.parentIndex === sectionIndex &&
-          hoveredRow.componentIndex === componentIndex &&
-          hoveredRow.priorComponentIndex === subComponentIndex
+          hoveredRow.parentIndex === sectionIndex
         );
       }
-    }
 
-    return false;
-  };
+      // from reusable steps BO
+      return (
+        hoveredRow &&
+        COMPONENT_NAME === hoveredRow.component &&
+        hoveredRow.index === index
+      );
+    },
+    [sectionIndex, hoveredRow, fromRecipe]
+  );
+
+  const _isStepComponentHover = useCallback(
+    (index, componentIndex, subComponentIndex) => {
+      if (hoveredRow) {
+        if (PRODUCTION_STEPS_COMPONENT_NAME === hoveredRow.component) {
+          // from recipe BO
+          if (fromRecipe) {
+            return (
+              hoveredRow.index === index &&
+              hoveredRow.parentIndex === sectionIndex &&
+              hoveredRow.componentIndex === componentIndex
+            );
+          }
+
+          // there is no sectionIndex in reusable steps BO
+          return (
+            hoveredRow.index === index &&
+            hoveredRow.componentIndex === componentIndex
+          );
+        }
+
+        if (PRODUCTION_STEPS_PRIOR_COMPONENT_NAME === hoveredRow.component) {
+          if (fromRecipe) {
+            return (
+              hoveredRow.index === index &&
+              hoveredRow.parentIndex === sectionIndex &&
+              hoveredRow.componentIndex === componentIndex &&
+              hoveredRow.priorComponentIndex === subComponentIndex
+            );
+          }
+          return (
+            hoveredRow.index === index &&
+            hoveredRow.componentIndex === componentIndex &&
+            hoveredRow.priorComponentIndex === subComponentIndex
+          );
+        }
+      }
+
+      return false;
+    },
+    [hoveredRow, sectionIndex, fromRecipe]
+  );
 
   const _hasError = useCallback(
     (index: number, field: string) => {
@@ -288,14 +320,14 @@ const Steps = ({
                         sx={{ backgroundColor: "#fff" }}
                       >
                         <StyledAccordionSummary
-                          onMouseEnter={() =>
+                          onMouseEnter={() => {
                             onRowHover(
                               PRODUCTION_STEPS_COMPONENT_NAME,
                               index,
                               sectionIndex,
                               indexComponent
-                            )
-                          }
+                            );
+                          }}
                           onMouseLeave={onRowBlur}
                           // componentName={PRODUCTION_STEPS_COMPONENT_NAME}
                         >

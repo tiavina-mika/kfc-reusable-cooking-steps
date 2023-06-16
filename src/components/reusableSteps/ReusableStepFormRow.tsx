@@ -8,7 +8,13 @@ import Steps from "../productionSteps/steps/Steps";
 type Props = {
   stepValues?: Record<string, any>;
   onRowBlur: () => void;
-  onRowHover: (component, index) => void;
+  onRowHover: (
+    component: string,
+    index: number,
+    parendIndex?: number | null,
+    stepComponentIndex?: number | null,
+    indexSubComponent?: number | null
+  ) => void;
   onFieldFocus: () => void;
   onFieldBlur: (event: Record<string, any>, setFieldTouched: any) => void;
   onKeyUp: (event: Record<string, any>, setFieldTouched: any) => void;

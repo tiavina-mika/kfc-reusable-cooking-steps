@@ -57,9 +57,25 @@ const ReusableStepForm: FC<Props> = ({ step, onSave, onCancel }) => {
     setHoveredRow(null);
   };
 
-  const onRowHover = (component, index) => {
+  /**
+   * ComponentIndex is used for productionSteps > stepComponents
+   * PriorComponentIndex is used for productionSteps > stepComponents > priorSteps
+   */
+  const onRowHover = (
+    component,
+    index,
+    parentIndex = null,
+    componentIndex = null,
+    priorComponentIndex = null
+  ) => {
     if (fieldFocused) return;
-    setHoveredRow({ component, index });
+    setHoveredRow({
+      component,
+      index,
+      parentIndex,
+      componentIndex,
+      priorComponentIndex
+    });
   };
 
   const onFieldFocus = () => setFieldFocused(true);
