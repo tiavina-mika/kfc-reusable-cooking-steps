@@ -1,4 +1,3 @@
-import { escapeRegExp } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { supplierItems } from "./supplierItems";
 import { computeRecipeASP, roundNumber } from "./utils";
@@ -866,10 +865,8 @@ export function resetStepComponent(stepComponent) {
 }
 
 export const searchSupplierItemsAutocomplete = (search: string) => {
-  const regex = new RegExp(escapeRegExp(search), "ig");
-
   const newSupplierItems = supplierItems.filter((supplierItem) =>
-    supplierItem.name.startWith(regex)
+    supplierItem.name.includes(search)
   );
   return newSupplierItems;
 };

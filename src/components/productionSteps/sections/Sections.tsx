@@ -15,6 +15,8 @@ import SectionPreview from "./SectionPreview";
 import EditableSection from "./EditableSection";
 import Steps from "../steps/Steps";
 import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
+import { supplierItems } from "../../../utils/data/supplierItems";
+import { transformationModes } from "../../../utils/data/transformationModes";
 
 export const COMPONENT_NAME = "SECTIONS";
 
@@ -60,6 +62,8 @@ export type IHoveredRow = {
   component: string;
   index: number;
   parentIndex?: number;
+  componentIndex?: number;
+  priorComponentIndex?: number;
 };
 type Props = {
   sections: any[];
@@ -256,6 +260,8 @@ const Sections: FC<Props> = ({
               onClearFocus={onClearFocus}
               formValues={formValues}
               setValues={setValues}
+              supplierItems={supplierItems}
+              transformationModes={transformationModes}
               // onKeyDown={(e) => _onKeyDown(e, section)}
             />
           </AccordionDetails>

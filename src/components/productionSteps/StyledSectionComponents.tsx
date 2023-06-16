@@ -164,13 +164,16 @@ export const StyledStepFirstBodyColumn = styled(
 
 type StyledTextProps = {
   disabled?: boolean;
+  weight?: number;
+  fontSize?: number;
 };
 export const StyledStepText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== "disabled"
-})<StyledTextProps>(({ disabled = false }) => {
+  shouldForwardProp: (prop) =>
+    prop !== "disabled" && prop !== "weight" && prop !== "fontSize"
+})<StyledTextProps>(({ disabled = false, weight = 600, fontSize = 14 }) => {
   let defaultStyles: Record<string, any> = {
-    fontWeight: 600,
-    fontSize: 14,
+    fontWeight: weight,
+    fontSize,
     lineHeight: 1.5
   };
 

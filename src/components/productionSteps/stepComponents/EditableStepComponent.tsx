@@ -106,7 +106,6 @@ export const FormikEditableStepSelect = ({
       {...props}
       name={name}
       value={value && value.objectId}
-      variant="standard"
       renderInput={(params) => (
         <StyledProductionStepTextField
           {...params}
@@ -133,7 +132,7 @@ type Props = {
   sectionIndex: number;
   supplierItems: Record<string, any>[];
   isHover: boolean;
-  hasError: boolean;
+  hasError: (index: number, field: string) => boolean;
   handleChange: any;
   setFieldValue: any;
 };
@@ -185,7 +184,7 @@ const EditableStepComponent = ({
 
     setPriorSteps(priorSteps);
     setSupplierItemsOptions([...priorSteps, ...supplierItemsOptions]);
-  }, [steps]);
+  }, [steps, stepComponent.index, supplierItemsOptions]);
 
   let supplierItem = stepComponent.supplierItem;
   const updateNetWeight = (event) => {
@@ -293,7 +292,7 @@ const EditableStepComponent = ({
     >
       <StyledStepFirstBodyColumn
         className="flexRow center"
-        style={{ backgroundColor: COLORS.PRODUCTION_STEPS_COMPONENT_WHITE }}
+        style={{ backgroundColor: "#fff" }}
       >
         {isHover && (
           <Button
@@ -301,7 +300,19 @@ const EditableStepComponent = ({
             className="flexCenter"
             sx={{ position: "absolute", left: -8 }}
           >
-            <img alt="plus icon" src="/icons/plus-blue.svg" />
+            {/* need to use directly the svg element because of an error in codesandbox importation */}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13 8H8V13C8 13.55 7.55 14 7 14C6.45 14 6 13.55 6 13V8H1C0.45 8 0 7.55 0 7C0 6.45 0.45 6 1 6H6V1C6 0.45 6.45 0 7 0C7.55 0 8 0.45 8 1V6H13C13.55 6 14 6.45 14 7C14 7.55 13.55 8 13 8Z"
+                fill="#2196F3"
+              />
+            </svg>
           </Button>
         )}
         <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
@@ -449,7 +460,6 @@ const EditableStepComponent = ({
                 {transformationModesOptions &&
                   transformationModesOptions.map((transformation, keyIndex) => (
                     <MenuItem
-                      isClearable={true}
                       key={
                         indexStep +
                         "-" +

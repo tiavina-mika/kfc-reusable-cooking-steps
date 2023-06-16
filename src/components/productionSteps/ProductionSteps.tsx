@@ -69,9 +69,25 @@ const ProductionSteps: FC<Props> = ({
     setHoveredRow(null);
   };
 
-  const _onRowHover = (component, index, parentIndex = null) => {
+  /**
+   * ComponentIndex is used for productionSteps > stepComponents
+   * PriorComponentIndex is used for productionSteps > stepComponents > priorSteps
+   */
+  const _onRowHover = (
+    component,
+    index,
+    parentIndex = null,
+    componentIndex = null,
+    priorComponentIndex = null
+  ) => {
     if (fieldFocused) return;
-    setHoveredRow({ component, index, parentIndex });
+    setHoveredRow({
+      component,
+      index,
+      parentIndex,
+      componentIndex,
+      priorComponentIndex
+    });
   };
 
   const _onClearFocus = () => setFieldFocused(false);

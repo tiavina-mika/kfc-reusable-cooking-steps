@@ -27,20 +27,17 @@ type Props = {
   setFieldValue: any;
 };
 
-const EditablePriorStepComponent = (
-  {
-    stepComponent,
-    transformationModes,
-    isHover,
-    sectionIndex,
-    indexStep,
-    indexComponent,
-    indexSubComponent,
-    parentStep,
-    setFieldValue
-  },
-  Props
-) => {
+const EditablePriorStepComponent = ({
+  stepComponent,
+  transformationModes,
+  isHover,
+  sectionIndex,
+  indexStep,
+  indexComponent,
+  indexSubComponent,
+  parentStep,
+  setFieldValue
+}: Props) => {
   const supplierItem = stepComponent.supplierItem;
 
   const getTransformationModeAvailable = () => {

@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { Fragment, useCallback } from "react";
 
 import styled from "@emotion/styled";
 import {
@@ -15,8 +15,15 @@ import StepPreview from "./StepPreview";
 import EditableStep from "./EditableStep";
 import { IHoveredRow } from "../sections/Sections";
 import ReusableStepFormRow from "../../reusableSteps/ReusableStepFormRow";
+import StepComponentPreview from "../stepComponents/StepComponentPreview";
+import EditableStepComponent from "../stepComponents/EditableStepComponent";
+import EditablePriorStepComponent from "../stepComponents/EditablePriorStepComponent";
+import PriorStepComponentPreview from "../stepComponents/PriorStepComponentPreview";
 
 export const COMPONENT_NAME = "STEPS";
+export const PRODUCTION_STEPS_COMPONENT_NAME = "PRODUCTION_STEPS";
+export const PRODUCTION_STEPS_PRIOR_COMPONENT_NAME =
+  "PRODUCTION_STEPS_PRIOR_COMPONENT";
 
 // ----------------------------------------------- //
 // -------------- styled components -------------- //
@@ -113,9 +120,13 @@ type Props = {
   setValues?: any;
   onClearFocus?: () => void;
   fromRecipe?: boolean;
+  allReusableSteps: Record<string, any>[];
+  supplierItems: Record<string, any>[];
+  transformationModes: Record<string, any>[];
+  handleChange?: any;
 };
 
-const Steps: FC<Props> = ({
+const Steps = ({
   steps,
   isEdition,
   sectionIndex,
@@ -127,55 +138,69 @@ const Steps: FC<Props> = ({
   onFieldFocus,
   onFieldBlur,
   onKeyUp,
-  // onKeyDown
-  // onDeleteHover,
-  // deleteHover,
-  setFieldValue,
-  errors,
+  hasError,
   machineTypes,
   kitchenAreas,
+  setFieldValue,
   computeStepsFormValues,
-  computeReusableStepsFormValues,
-  hasError,
+  supplierItems,
+  transformationModes,
+  handleChange,
   isReusable,
+  computeReusableStepsFormValues,
 
+  errors,
   setValues,
   formValues,
   onClearFocus,
+  allReusableSteps,
   fromRecipe = true
-  // onDeleteBlur
-}) => {
-  // do not display steps row in preview if it's empty
-  // dsiplay an empty row if steps is empty in edition mode
-  // alway has a default section, see: getDefaultSection()
-
-  // if (!isEdition && !(steps.length && steps[0].id)) return;
-
-  // const _isHover = (index: number): boolean => {
-  //   return (
-  //     hoveredRow &&
-  //     COMPONENT_NAME === hoveredRow.component &&
-  //     hoveredRow.index === index
-  //   );
-  // };
-  const _isHover = (index) =>
-    hoveredRow &&
-    COMPONENT_NAME === hoveredRow.component &&
-    hoveredRow.index === index &&
-    hoveredRow.parentIndex === sectionIndex;
-
-  // const _isDeleteHover = (index: number): boolean => {
-  //   return (
-  //     deleteHover &&
-  //     COMPONENT_NAME === deleteHover.component &&
-  //     deleteHover.index === index
-  //   );
-  // };
-
-  const _hasError = (index: number, field: string) => {
-    // return errors.sections?.[sectionIndex]?.productionSteps[index]?.[field];
-    return hasError(index, field, sectionIndex);
+}: Props) => {
+  const _isStepHover = (index) => {
+    return (
+      hoveredRow &&
+      COMPONENT_NAME === hoveredRow.component &&
+      hoveredRow.index === index &&
+      hoveredRow.parentIndex === sectionIndex
+    );
   };
+
+  const _isStepComponentHover = (index, componentIndex, subComponentIndex) => {
+    if (hoveredRow) {
+      if (PRODUCTION_STEPS_COMPONENT_NAME === hoveredRow.component) {
+        return (
+          hoveredRow.index === index &&
+          hoveredRow.parentIndex === sectionIndex &&
+          hoveredRow.componentIndex === componentIndex
+        );
+      } else if (
+        PRODUCTION_STEPS_PRIOR_COMPONENT_NAME === hoveredRow.component
+      ) {
+        return (
+          hoveredRow.index === index &&
+          hoveredRow.parentIndex === sectionIndex &&
+          hoveredRow.componentIndex === componentIndex &&
+          hoveredRow.priorComponentIndex === subComponentIndex
+        );
+      }
+    }
+
+    return false;
+  };
+
+  const _hasError = useCallback(
+    (index: number, field: string) => {
+      return hasError(index, field, sectionIndex);
+    },
+    [sectionIndex, hasError]
+  );
+
+  // TODO: should be removed? It's already added in form initial values or when adding a new step
+  // steps.forEach(step => {
+  //   if (step.stepComponents.length === 0) {
+  //     step.stepComponents.push(getEmptyStepComponent())
+  //   }
+  // })
 
   return (
     <Box className="flexColumn" sx={{ position: "relative" }}>
@@ -222,36 +247,182 @@ const Steps: FC<Props> = ({
                       step={step}
                       index={index}
                       isEdition={isEdition}
-                      // index={index}
-                      isHover={_isHover(index)}
+                      isHover={_isStepHover(index)}
                       sectionIndex={sectionIndex}
-                      // isDeleteHover={_isDeleteHover(index)}
-                      // genericSections={genericSections}
-                      setFieldValue={setFieldValue}
                       onFieldFocus={onFieldFocus}
                       onFieldBlur={onFieldBlur}
                       onKeyUp={onKeyUp}
-                      // onDeleteBlur={onDeleteBlur}
                       hasError={_hasError}
                       machineTypes={machineTypes}
                       kitchenAreas={kitchenAreas}
+                      setFieldValue={setFieldValue}
                       computeStepsFormValues={computeStepsFormValues}
+                      isReusable={isReusable}
                       computeReusableStepsFormValues={
                         computeReusableStepsFormValues
                       }
-                      // onAddStep={handleAddStep}
-                      isReusable={isReusable}
-                      // isReusable={isReusable}
-                      allReusableSteps={reusableSteps}
-                      onClearFocus={onClearFocus}
-                      setValues={setValues}
-                      formValues={formValues}
                       fromRecipe={fromRecipe}
+                      onClearFocus={onClearFocus}
+                      allReusableSteps={allReusableSteps}
+                      formValues={formValues}
+                      setValues={setValues}
                     />
                   ) : (
                     <StepPreview step={step} index={index} />
                   )}
                 </StyledAccordionSummary>
+                {step.stepComponents.map((stepComponent, indexComponent) =>
+                  /** START SUPPLIER ITEM STEP COMPONENT CASE **/
+                  (stepComponent.emptyComponent && !stepComponent.priorSteps) ||
+                  stepComponent.supplierItem ? (
+                    <StyledAccordion
+                      elevation={0}
+                      defaultExpanded
+                      square
+                      disableGutters
+                      key={indexComponent}
+                      sx={{ backgroundColor: "#fff" }}
+                    >
+                      <StyledAccordionSummary
+                        onMouseEnter={() =>
+                          onRowHover(
+                            PRODUCTION_STEPS_COMPONENT_NAME,
+                            index,
+                            sectionIndex,
+                            indexComponent
+                          )
+                        }
+                        onMouseLeave={onRowBlur}
+                        // componentName={PRODUCTION_STEPS_COMPONENT_NAME}
+                      >
+                        {isEdition ? (
+                          <EditableStepComponent
+                            steps={steps}
+                            sectionIndex={sectionIndex}
+                            onKeyUp={onKeyUp}
+                            hasError={_hasError}
+                            stepComponent={stepComponent}
+                            stepComponents={step.stepComponents}
+                            parentStep={step}
+                            indexComponent={indexComponent}
+                            indexStep={index}
+                            supplierItems={supplierItems}
+                            transformationModes={transformationModes}
+                            handleChange={handleChange}
+                            setFieldValue={setFieldValue}
+                            isHover={_isStepComponentHover(
+                              index,
+                              indexComponent
+                            )}
+                          />
+                        ) : (
+                          <StepComponentPreview
+                            stepComponent={stepComponent}
+                            supplierItem={
+                              stepComponent && stepComponent.supplierItem
+                            }
+                          />
+                        )}
+                      </StyledAccordionSummary>
+                    </StyledAccordion>
+                  ) : /** END SUPPLIER ITEM STEP COMPONENT CASE **/
+                  /** START PRIOR STEPS COMPONENT CASE **/
+                  stepComponent.priorSteps ? (
+                    <StyledAccordion
+                      elevation={0}
+                      defaultExpanded
+                      square
+                      disableGutters
+                      key={indexComponent + stepComponent.priorSteps.objectId}
+                      sx={{
+                        backgroundColor: COLORS.PRODUCTION_STEPS_COMPONENT_WHITE
+                      }}
+                    >
+                      <StyledAccordionSummary
+                        onMouseEnter={() =>
+                          onRowHover(
+                            PRODUCTION_STEPS_COMPONENT_NAME,
+                            index,
+                            sectionIndex,
+                            indexComponent
+                          )
+                        }
+                        onMouseLeave={onRowBlur}
+                        // componentName={PRODUCTION_STEPS_COMPONENT_NAME}
+                      >
+                        {isEdition ? (
+                          <EditableStepComponent
+                            steps={steps}
+                            sectionIndex={sectionIndex}
+                            hasError={_hasError}
+                            stepComponent={stepComponent}
+                            stepComponents={step.stepComponents}
+                            parentStep={step}
+                            indexComponent={indexComponent}
+                            indexStep={index}
+                            supplierItems={supplierItems}
+                            transformationModes={transformationModes}
+                            handleChange={handleChange}
+                            setFieldValue={setFieldValue}
+                            isHover={_isStepComponentHover(
+                              index,
+                              indexComponent
+                            )}
+                          />
+                        ) : (
+                          <PriorStepComponentPreview
+                            stepComponent={stepComponent}
+                            index={indexComponent}
+                          />
+                        )}
+                      </StyledAccordionSummary>
+                      {stepComponent.priorSteps.stepComponents.map(
+                        (subStepComponent, indexSubComponent) => (
+                          <StyledAccordionSummary
+                            key={indexSubComponent}
+                            onMouseEnter={() =>
+                              onRowHover(
+                                PRODUCTION_STEPS_PRIOR_COMPONENT_NAME,
+                                index,
+                                sectionIndex,
+                                indexComponent,
+                                indexSubComponent
+                              )
+                            }
+                            onMouseLeave={onRowBlur}
+                            // componentName={PRODUCTION_STEPS_PRIOR_COMPONENT_NAME}
+                          >
+                            {isEdition ? (
+                              <EditablePriorStepComponent
+                                sectionIndex={sectionIndex}
+                                stepComponent={subStepComponent}
+                                indexComponent={indexComponent}
+                                indexStep={index}
+                                parentStep={step}
+                                indexSubComponent={indexSubComponent}
+                                transformationModes={transformationModes}
+                                isHover={_isStepComponentHover(
+                                  index,
+                                  indexComponent,
+                                  indexSubComponent
+                                )}
+                                setFieldValue={setFieldValue}
+                              />
+                            ) : (
+                              <StepComponentPreview
+                                key={indexComponent + "-" + indexSubComponent}
+                                stepComponent={subStepComponent}
+                                supplierItem={subStepComponent.supplierItem}
+                                subComponent
+                              />
+                            )}
+                          </StyledAccordionSummary>
+                        )
+                      )}
+                    </StyledAccordion>
+                  ) : null
+                  /** END PRIOR STEPS COMPONENT CASE **/
+                )}
               </StyledAccordion>
             </>
           )}
