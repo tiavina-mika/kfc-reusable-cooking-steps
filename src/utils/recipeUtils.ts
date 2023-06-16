@@ -1,4 +1,6 @@
+import { escapeRegExp } from "lodash";
 import { v4 as uuidv4 } from "uuid";
+import { supplierItems } from "./supplierItems";
 import { computeRecipeASP, roundNumber } from "./utils";
 
 const SUGGESTED_PRICE = {
@@ -815,4 +817,59 @@ export const computeReusableProductionStepsOnFieldChange = (
 
     computeStepData(step, "stepComponents");
   }
+};
+
+export const recalculateCostValues = (stepComponent: Record<string, any>) => {
+  stepComponent.grossWeight =
+    stepComponent.netWeight /
+    ((stepComponent.transformRate ? stepComponent.transformRate : 100) / 100) /
+    1000;
+  stepComponent.realCost = roundNumber(
+    stepComponent.grossWeight * stepComponent.supplierItem.pricePerKg,
+    3
+  );
+
+  return stepComponent;
+};
+
+export function getEmptyStepComponent() {
+  return {
+    complexity: null,
+    cookingMode: null,
+    cookingModeLabel: null,
+    cost: null,
+    error: false,
+    grossWeight: null,
+    index: 0,
+    netWeight: null,
+    realCost: null,
+    supplierItem: null,
+    transformRate: null,
+    transformationMode: null,
+    emptyComponent: true
+  };
+}
+
+export function resetStepComponent(stepComponent) {
+  stepComponent.grossWeight = 0;
+  stepComponent.cookingMode = null;
+  stepComponent.cookingModeLabel = null;
+  stepComponent.cost = null;
+  stepComponent.netWeight = null;
+  stepComponent.realCost = null;
+  stepComponent.supplierItem = null;
+  stepComponent.priorSteps = null;
+  stepComponent.transformRate = 100;
+  stepComponent.transformationMode = null;
+
+  return stepComponent;
+}
+
+export const searchSupplierItemsAutocomplete = (search: string) => {
+  const regex = new RegExp(escapeRegExp(search), "ig");
+
+  const newSupplierItems = supplierItems.filter((supplierItem) =>
+    supplierItem.name.startWith(regex)
+  );
+  return newSupplierItems;
 };
