@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { supplierItems } from "./supplierItems";
+import { supplierItems } from "./data/supplierItems";
 import { computeRecipeASP, roundNumber } from "./utils";
 
 const SUGGESTED_PRICE = {

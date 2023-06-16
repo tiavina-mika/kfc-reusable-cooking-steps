@@ -1,7 +1,7 @@
 export const supplierItems = [
   {
     type: "SALABLE_PRODUCT",
-    name: "ASSIETTE FALAFEL, BOULGOUR, PUREE DE PETITS-POIS & CAROTTES ROTIES",
+    name: "Assiette falafel",
     supplierArticleId: "",
     supplierName: "RACHEL'S",
     easilysId: "1-32-2493",
@@ -71,7 +71,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "AMANDES AU CHOCOLAT AU LAIT & CANNELLE 40G X 48",
+    name: "Amandes au chocolat au lait & cannelle 40g x 48",
     supplierArticleId: null,
     supplierName: "110 GRAINES",
     easilysId: "1-148-5282",
@@ -103,7 +103,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "37CL VOLVIC INF.ROOIB. PET2X12",
+    name: "37cl volvic",
     supplierArticleId: "556",
     supplierName: "SOCODIS",
     easilysId: "1-111-2918",
@@ -172,7 +172,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "AMANDES TAMARI 40GR TEST",
+    name: "Amandes tamari",
     supplierArticleId: "",
     supplierName: "110 GRAINES",
     easilysId: "1-148-3087",
@@ -241,7 +241,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "AMANDES PREMIUM BIO",
+    name: "Premium amande bio",
     supplierArticleId: null,
     supplierName: "110 GRAINES",
     easilysId: "1-148-4175",
@@ -308,7 +308,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "GRANOLA CHOCO ACEROLA 70 GR X 144",
+    name: "Granola choco acerola",
     supplierArticleId: "",
     supplierName: "110 GRAINES",
     easilysId: "1-148-5067",
@@ -378,7 +378,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "BOISSON MIEL CITRON GINGEMBRE BIO 25CL",
+    name: "Boisson miel citron gingembre bio",
     supplierArticleId: 2321,
     supplierName: "MELIO",
     easilysId: "1-117-2321",
@@ -409,7 +409,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "BONSBECS PAVOT & PASSION",
+    name: "Bonsbecs pavot & passion",
     supplierArticleId: null,
     supplierName: "TINY BIRD",
     easilysId: "1-222-5189",
@@ -476,7 +476,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "BOISSON MIEL POMME CANNELLE BIO 25CL",
+    name: "Boisson miel pomme cannelle bio",
     supplierArticleId: 2322,
     supplierName: "MELIO",
     easilysId: "1-117-2322",
@@ -507,7 +507,7 @@ export const supplierItems = [
   },
   {
     type: "SALABLE_PRODUCT",
-    name: "BONSBECS FRAMBOISE & GOJI",
+    name: "Framboise & goji bonsbecs",
     supplierArticleId: null,
     supplierName: "TINY BIRD",
     easilysId: "1-222-5190",

@@ -18,7 +18,7 @@ import {
   StyledStepText
 } from "../StyledSectionComponents";
 import { roundNumber } from "../../../utils/utils";
-import { COLORS, PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
+import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
   getEmptyStepComponent,
   resetStepComponent,
