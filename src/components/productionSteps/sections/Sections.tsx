@@ -17,6 +17,7 @@ import Steps from "../steps/Steps";
 import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
 import { supplierItems } from "../../../utils/data/supplierItems";
 import { transformationModes } from "../../../utils/data/transformationModes";
+import { reusableSteps } from "../../../utils/data/reusableSteps";
 
 export const COMPONENT_NAME = "SECTIONS";
 
@@ -262,6 +263,7 @@ const Sections: FC<Props> = ({
               setValues={setValues}
               supplierItems={supplierItems}
               transformationModes={transformationModes}
+              allReusableSteps={reusableSteps}
               // onKeyDown={(e) => _onKeyDown(e, section)}
             />
           </AccordionDetails>

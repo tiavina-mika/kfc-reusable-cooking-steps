@@ -185,7 +185,6 @@ const EditableStep: FC<Props> = ({
   // onAddStep,
   // onDeleteBlur
 }) => {
-  // console.log('EdiatbleStep step', step)
   const _stopPropagation = (event) => event && event.stopPropagation();
 
   const getFieldName = useCallback(

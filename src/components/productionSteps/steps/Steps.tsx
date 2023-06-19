@@ -121,9 +121,9 @@ type Props = {
   setValues?: any;
   onClearFocus?: () => void;
   fromRecipe?: boolean;
-  allReusableSteps: Record<string, any>[];
-  supplierItems: Record<string, any>[];
-  transformationModes: Record<string, any>[];
+  allReusableSteps?: Record<string, any>[];
+  supplierItems?: Record<string, any>[];
+  transformationModes?: Record<string, any>[];
   handleChange?: any;
 };
 
@@ -231,13 +231,6 @@ const Steps = ({
     },
     [sectionIndex, hasError]
   );
-
-  // TODO: should be removed? It's already added in form initial values or when adding a new step
-  // steps.forEach(step => {
-  //   if (step.stepComponents.length === 0) {
-  //     step.stepComponents.push(getEmptyStepComponent())
-  //   }
-  // })
 
   return (
     <Box className="flexColumn" sx={{ position: "relative" }}>
