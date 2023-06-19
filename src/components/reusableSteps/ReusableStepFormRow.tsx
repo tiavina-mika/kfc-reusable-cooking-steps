@@ -8,7 +8,7 @@ import Steps from "../productionSteps/steps/Steps";
 type Props = {
   stepValues?: Record<string, any>;
   onRowBlur: () => void;
-  onRowHover: (
+  onRowHover?: (
     component: string,
     index: number,
     parendIndex?: number | null,

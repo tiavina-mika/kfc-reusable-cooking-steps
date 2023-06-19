@@ -84,7 +84,7 @@ type Props = {
   steps: Record<string, any>[];
   isEdition: boolean;
   sectionIndex?: number;
-  onRowHover: (
+  onRowHover?: (
     component: string,
     index: number,
     parendIndex?: number | null,
@@ -238,7 +238,7 @@ const Steps = ({
         <Fragment key={index}>
           {step.isReusable ? (
             <ReusableStepFormRow
-              onRowHover={onRowHover}
+              // onRowHover={onRowHover}
               onRowBlur={onRowBlur}
               hoveredRow={hoveredRow}
               onFieldFocus={onFieldFocus}
@@ -266,9 +266,9 @@ const Steps = ({
                   expandIcon={
                     <img alt="chevron" src="/icons/chevron-down.svg" />
                   }
-                  onMouseEnter={() =>
-                    onRowHover(COMPONENT_NAME, index, sectionIndex)
-                  }
+                  onMouseEnter={() => {
+                    onRowHover?.(COMPONENT_NAME, index, sectionIndex);
+                  }}
                   onMouseLeave={onRowBlur}
                 >
                   {isEdition ? (
@@ -317,7 +317,7 @@ const Steps = ({
                       >
                         <StyledAccordionSummary
                           onMouseEnter={() => {
-                            onRowHover(
+                            onRowHover?.(
                               PRODUCTION_STEPS_COMPONENT_NAME,
                               index,
                               sectionIndex,
@@ -372,7 +372,7 @@ const Steps = ({
                       >
                         <StyledAccordionSummary
                           onMouseEnter={() =>
-                            onRowHover(
+                            onRowHover?.(
                               PRODUCTION_STEPS_COMPONENT_NAME,
                               index,
                               sectionIndex,
@@ -414,7 +414,7 @@ const Steps = ({
                             <StyledAccordionSummary
                               key={indexSubComponent}
                               onMouseEnter={() =>
-                                onRowHover(
+                                onRowHover?.(
                                   PRODUCTION_STEPS_PRIOR_COMPONENT_NAME,
                                   index,
                                   sectionIndex,

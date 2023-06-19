@@ -538,7 +538,7 @@ export const recipe = {
       parentId: null,
       parentPercent: 0,
       createdAt: "2022-06-24T08:56:23.477Z",
-      updatedAt: "2023-06-19T12:33:52.171Z",
+      updatedAt: "2023-06-16T08:37:19.991Z",
       productionSteps: [
         {
           stepComponents: [
@@ -1302,76 +1302,10 @@ export const recipe = {
           cost: 0.0439121,
           realCost: 0.0439121,
           createdAt: "2023-03-20T20:57:37.692Z",
-          updatedAt: "2023-06-19T12:33:50.539Z",
+          updatedAt: "2023-06-16T08:37:16.196Z",
           objectId: "HdZcGCQRbM",
           __type: "Object",
           className: "ProductionStep"
-        },
-        {
-          productionSteps: [
-            {
-              stepComponents: [],
-              name: "PS 02",
-              description: "Some desc",
-              kitchenArea: {
-                name: "ffefaf",
-                createdAt: "2023-02-21T14:47:27.491Z",
-                updatedAt: "2023-02-21T14:47:27.491Z",
-                objectId: "48AIvqmOq4",
-                __type: "Object",
-                className: "KitchenArea"
-              },
-              transformation: "WASHING",
-              machineType: {
-                name: "Machine 2",
-                createdAt: "2022-08-24T08:54:36.329Z",
-                updatedAt: "2022-09-01T08:46:35.321Z",
-                machineModels: [
-                  {
-                    __type: "Pointer",
-                    className: "MachineModels",
-                    objectId: "4GgEHZS81a"
-                  },
-                  {
-                    __type: "Pointer",
-                    className: "MachineModels",
-                    objectId: "yhnXE2VdpH"
-                  },
-                  {
-                    __type: "Pointer",
-                    className: "MachineModels",
-                    objectId: "zvHwBLmG4u"
-                  }
-                ],
-                objectId: "Bv9NbFsmUK",
-                __type: "Object",
-                className: "MachineTypes"
-              },
-              machineSetting: "mm",
-              stepDuration: 14,
-              createdAt: "2023-06-07T09:44:40.376Z",
-              updatedAt: "2023-06-15T09:47:06.778Z",
-              objectId: "pHRAIb1QZX",
-              __type: "Object",
-              className: "ProductionStep"
-            },
-            {
-              stepComponents: [],
-              name: "PS 02-2",
-              description: "Desc 2 there",
-              createdAt: "2023-06-15T09:47:07.043Z",
-              updatedAt: "2023-06-15T09:47:07.043Z",
-              objectId: "87TuRa7A1e",
-              __type: "Object",
-              className: "ProductionStep"
-            }
-          ],
-          name: "PS 02-2",
-          createdAt: "2023-06-15T09:47:07.293Z",
-          updatedAt: "2023-06-15T09:47:07.293Z",
-          objectId: "zBuQc4uJ5u",
-          __type: "Object",
-          className: "ReusableProductionStep"
         }
       ],
       grossWeight: 0.03364,

@@ -388,12 +388,6 @@ export const parseProductionStepToObject = (step, percent = false) => {
   };
 };
 
-export const parseProductionStepsToObject = (steps, percent = false) => {
-  return steps.map((step) => {
-    return parseProductionStepToObject(step, percent);
-  });
-};
-
 export const parseReusableProductionStepToObject = (step, percent = false) => ({
   objectId: step.objectId,
   name: step.name || "",
@@ -401,6 +395,7 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
   isReusable: true,
   error: step.description && step.description !== "" ? false : true,
   productionSteps: step.productionSteps
+    /* eslint-disable-next-line */
     ? parseProductionStepsToObject(step.productionSteps, percent)
     : []
   // grossWeight:
@@ -408,6 +403,16 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
   //     ? step.grossWeight || 0
   //     : ((step.grossWeight || 0) * (percent as any)) / 100,
 });
+
+export const parseProductionStepsToObject = (steps, percent = false) => {
+  return steps.map((step) => {
+    console.log('step', step)
+    if (step.className === "ReusableProductionStep") {
+      return parseReusableProductionStepToObject(step, percent);
+    }
+    return parseProductionStepToObject(step, percent);
+  });
+};
 
 export const parseReusableProductionStepsToObject = (
   steps,
@@ -610,26 +615,29 @@ function computeDisplayData(
 ) {
   for (const section of recipe.sections) {
     for (const step of section[stepsField]) {
-      for (const ingredient of step[stepIngredientField]) {
-        const computedIngredientData = computeIngredientData(ingredient);
-        ingredient.netWeight = computedIngredientData.netWeight;
-        ingredient.cost = computedIngredientData.cost;
-        ingredient.realCost = (computedIngredientData as any).realCost;
-        ingredient.transformRate = (computedIngredientData as any).transformRate;
-        ingredient.cookingModeLabel = (computedIngredientData as any).cookingModeLabel;
-
-        const currentCookingMode =
-          ingredient.supplierItem &&
-          ingredient.supplierItem.cookingModes.find(
-            (cookingMode) =>
-              cookingMode.cookingMode.id === ingredient.cookingMode
-          );
-        ingredient.transformRate = currentCookingMode
-          ? parseFloat(currentCookingMode.transformRate)
-          : 0;
+      if (!step.isReusable) {
+        for (const ingredient of step[stepIngredientField]) {
+          const computedIngredientData = computeIngredientData(ingredient);
+          ingredient.netWeight = computedIngredientData.netWeight;
+          ingredient.cost = computedIngredientData.cost;
+          ingredient.realCost = (computedIngredientData as any).realCost;
+          ingredient.transformRate = (computedIngredientData as any).transformRate;
+          ingredient.cookingModeLabel = (computedIngredientData as any).cookingModeLabel;
+  
+          const currentCookingMode =
+            ingredient.supplierItem &&
+            ingredient.supplierItem.cookingModes.find(
+              (cookingMode) =>
+                cookingMode.cookingMode.id === ingredient.cookingMode
+            );
+          ingredient.transformRate = currentCookingMode
+            ? parseFloat(currentCookingMode.transformRate)
+            : 0;
+        }
+  
+        computeStepData(step, stepIngredientField);
       }
-
-      computeStepData(step, stepIngredientField);
+ 
     }
 
     computeSectionData(section, stepsField);
