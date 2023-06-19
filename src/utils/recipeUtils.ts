@@ -395,8 +395,8 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
   isReusable: true,
   error: step.description && step.description !== "" ? false : true,
   productionSteps: step.productionSteps
-    /* eslint-disable-next-line */
-    ? parseProductionStepsToObject(step.productionSteps, percent)
+    ? /* eslint-disable-next-line */
+      parseProductionStepsToObject(step.productionSteps, percent)
     : []
   // grossWeight:
   //   false !== percent
@@ -406,7 +406,6 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
 
 export const parseProductionStepsToObject = (steps, percent = false) => {
   return steps.map((step) => {
-    console.log('step', step)
     if (step.className === "ReusableProductionStep") {
       return parseReusableProductionStepToObject(step, percent);
     }
@@ -623,7 +622,7 @@ function computeDisplayData(
           ingredient.realCost = (computedIngredientData as any).realCost;
           ingredient.transformRate = (computedIngredientData as any).transformRate;
           ingredient.cookingModeLabel = (computedIngredientData as any).cookingModeLabel;
-  
+
           const currentCookingMode =
             ingredient.supplierItem &&
             ingredient.supplierItem.cookingModes.find(
@@ -634,10 +633,9 @@ function computeDisplayData(
             ? parseFloat(currentCookingMode.transformRate)
             : 0;
         }
-  
+
         computeStepData(step, stepIngredientField);
       }
- 
     }
 
     computeSectionData(section, stepsField);
