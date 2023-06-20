@@ -24,6 +24,7 @@ type Props = {
   setValues?: any;
   machineTypes?: Record<string, any>[];
   kitchenAreas?: Record<string, any>[];
+  parentStepIndex?: number;
 };
 const ReusableStepFormRow: FC<Props> = ({
   onRowHover,
@@ -37,7 +38,8 @@ const ReusableStepFormRow: FC<Props> = ({
   setFieldValue,
   setValues,
   machineTypes,
-  kitchenAreas
+  kitchenAreas,
+  parentStepIndex
 }) => {
   const computeReusableStepsFormValues = useCallback(
     (steps: Record<string, any>) => {
@@ -88,6 +90,7 @@ const ReusableStepFormRow: FC<Props> = ({
         computeReusableStepsFormValues={computeReusableStepsFormValues}
         isReusable
         fromRecipe={false}
+        parentStepIndex={parentStepIndex}
       />
     </>
   );

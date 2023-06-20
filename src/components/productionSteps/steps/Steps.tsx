@@ -20,6 +20,8 @@ import EditablePriorStepComponent from "../stepComponents/EditablePriorStepCompo
 import PriorStepComponentPreview from "../stepComponents/PriorStepComponentPreview";
 
 export const COMPONENT_NAME = "STEPS";
+export const REUSABLE_PRODUCTION_STEP_COMPONENT_NAME =
+  "REUSABLE_PRODUCTION_STEPS";
 export const PRODUCTION_STEPS_COMPONENT_NAME = "PRODUCTION_STEPS";
 export const PRODUCTION_STEPS_PRIOR_COMPONENT_NAME =
   "PRODUCTION_STEPS_PRIOR_COMPONENT";
@@ -125,6 +127,7 @@ type Props = {
   supplierItems?: Record<string, any>[];
   transformationModes?: Record<string, any>[];
   handleChange?: any;
+  parentStepIndex?: number;
 };
 
 const Steps = ({
@@ -155,10 +158,14 @@ const Steps = ({
   formValues,
   onClearFocus,
   allReusableSteps,
+  parentStepIndex,
   fromRecipe = true
 }: Props) => {
   const _isStepHover = useCallback(
-    (index) => {
+    (index: number): boolean => {
+      if (!isEdition) return;
+      // if (fromRecipe && steps[index].isReusable) return
+      if (parentStepIndex !== undefined) return;
       // from recipe BO
       if (fromRecipe) {
         return (
@@ -176,7 +183,7 @@ const Steps = ({
         hoveredRow.index === index
       );
     },
-    [sectionIndex, hoveredRow, fromRecipe]
+    [sectionIndex, hoveredRow, fromRecipe, parentStepIndex, isEdition]
   );
 
   const _isStepComponentHover = useCallback(
@@ -238,7 +245,7 @@ const Steps = ({
         <Fragment key={index}>
           {step.isReusable ? (
             <ReusableStepFormRow
-              // onRowHover={onRowHover}
+              onRowHover={onRowHover}
               onRowBlur={onRowBlur}
               hoveredRow={hoveredRow}
               onFieldFocus={onFieldFocus}
@@ -252,6 +259,7 @@ const Steps = ({
                 formValues.sections[sectionIndex].productionSteps[index] || []
               }
               setValues={setValues}
+              parentStepIndex={index}
             />
           ) : (
             <>

@@ -81,6 +81,7 @@ const ProductionSteps: FC<Props> = ({
     priorComponentIndex = null
   ) => {
     if (fieldFocused) return;
+
     setHoveredRow({
       component,
       index,
