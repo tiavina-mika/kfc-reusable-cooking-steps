@@ -316,9 +316,11 @@ export function parseIngredientsListToObject(
           .get("complexity");
       } else {
         const commercialName = ingredient.supplierItem.commercialName;
-        complexity = commercialName.get
-          ? commercialName.get("complexity")
-          : commercialName.complexity;
+        if (commercialName) {
+          complexity = commercialName.get
+            ? commercialName.get("complexity")
+            : commercialName.complexity;
+        }
       }
     }
 

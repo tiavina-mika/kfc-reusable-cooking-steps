@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 
 import ProductionSteps from "./components/productionSteps/ProductionSteps";
+import { updateRecipeSections } from "./utils/sectionsUtils";
 
 type Props = {
   recipe: Record<string, any>;
@@ -19,7 +20,9 @@ const Recipe: FC<Props> = ({ recipe, genericSections }) => {
   };
 
   const onSaveProductionSteps = (values) => {
-    console.log("onSaveProductionSteps values", values);
+    console.log("onSaveProductionSteps input values", values);
+    const outputValues = updateRecipeSections(values, recipe);
+    console.log("onSaveProductionSteps output values", outputValues);
     toggleProductionStepsIsEdition();
   };
 

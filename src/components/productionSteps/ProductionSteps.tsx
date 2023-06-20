@@ -126,8 +126,6 @@ const ProductionSteps: FC<Props> = ({
   };
 
   const _onSubmit = (values) => {
-    console.log("values", values);
-    return;
     onSave(values);
     // onSave(cloneDeep(values), recipe, "6" === recipe.status).then(onStopEdit)
   };
