@@ -20,8 +20,7 @@ import EditablePriorStepComponent from "../stepComponents/EditablePriorStepCompo
 import PriorStepComponentPreview from "../stepComponents/PriorStepComponentPreview";
 
 export const COMPONENT_NAME = "STEPS";
-export const REUSABLE_PRODUCTION_STEP_COMPONENT_NAME =
-  "REUSABLE_PRODUCTION_STEPS";
+
 export const PRODUCTION_STEPS_COMPONENT_NAME = "PRODUCTION_STEPS";
 export const PRODUCTION_STEPS_PRIOR_COMPONENT_NAME =
   "PRODUCTION_STEPS_PRIOR_COMPONENT";
@@ -245,7 +244,7 @@ const Steps = ({
         <Fragment key={index}>
           {step.isReusable ? (
             <ReusableStepFormRow
-              onRowHover={onRowHover}
+              // onRowHover={onRowHover}
               onRowBlur={onRowBlur}
               hoveredRow={hoveredRow}
               onFieldFocus={onFieldFocus}
