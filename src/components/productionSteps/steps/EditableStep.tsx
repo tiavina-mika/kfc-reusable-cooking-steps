@@ -33,6 +33,7 @@ import {
 } from "../../../utils/utils";
 import { PRODUCTION_STEPS_COL_WIDTHS } from "../../../utils/constant";
 import {
+  computeProductionStepsRecipeOnFieldChange,
   computeStepData,
   getDefaultSteps,
   parseReusableProductionStepToObject,
@@ -308,6 +309,7 @@ const EditableStep: FC<Props> = ({
       // const parsedReusableStep = parseReusableProductionStepToObject(step)
       const newStep =
         parseReusableProductionStepToObject(step) || getDefaultSteps();
+      // console.log('newStep', newStep)
       newSteps[stepIndex] = newStep;
 
       newSteps[stepIndex].error = false;
@@ -320,15 +322,30 @@ const EditableStep: FC<Props> = ({
       // newFormValues.productionSteps = newSteps;
       // newFormValues.name = value?.toUpperCase();
 
-      // newSteps[stepIndex].productionSteps.forEach((step, stepIndex) => {
+      // console.log('newSteps[stepIndex]', newSteps[stepIndex])
+      // newSteps[stepIndex].productionSteps.forEach((step, index) => {
       //   step.stepComponents.forEach((_, ingredientIndex) => {
       //     computeReusableProductionStepsOnFieldChange(
-      //       step,
-      //       stepIndex,
+      //       newSteps[stepIndex],
+      //       index,
       //       ingredientIndex
       //     );
       //   });
       // });
+
+      // TODO: test this
+      newFormValues.sections[sectionIndex].productionSteps.forEach(
+        (step, stepIndex) => {
+          step.stepComponents.forEach((_, ingredientIndex) => {
+            computeProductionStepsRecipeOnFieldChange(
+              newFormValues,
+              sectionIndex,
+              stepIndex,
+              ingredientIndex
+            );
+          });
+        }
+      );
 
       // console.log('newSteps[stepIndex]', newSteps[stepIndex])
       newFormValues.sections[sectionIndex].productionSteps = newSteps;

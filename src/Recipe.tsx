@@ -23,6 +23,7 @@ const Recipe: FC<Props> = ({ recipe, genericSections }) => {
     console.log("onSaveProductionSteps input values", values);
     const outputValues = updateRecipeSections(values, recipe);
     console.log("onSaveProductionSteps output values", outputValues);
+    return;
     toggleProductionStepsIsEdition();
   };
 

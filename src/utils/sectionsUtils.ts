@@ -54,13 +54,16 @@ export const computeIngredientsPercentage = (
 
   for (const section of sections) {
     for (const step of section[stepsField]) {
-      for (const ingredient of step[ingredientsField]) {
-        const ingredientData = computeIngredientData(ingredient);
-        const currentIngredientWeight = ingredientsWeight.find(
-          (el) => el.id === ingredient.supplierItem?.id
-        );
-        if (currentIngredientWeight) {
-          currentIngredientWeight.weight += ingredientData.netWeight;
+      if (!step.isReusable) {
+        for (const ingredient of step[ingredientsField]) {
+          const ingredientData = computeIngredientData(ingredient);
+          const currentIngredientWeight = ingredientsWeight.find(
+            (ingredientWeight) =>
+              ingredientWeight.id === ingredient.supplierItem?.id
+          );
+          if (currentIngredientWeight) {
+            currentIngredientWeight.weight += ingredientData.netWeight;
+          }
         }
       }
     }
