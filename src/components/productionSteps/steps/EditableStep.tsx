@@ -288,6 +288,7 @@ const EditableStep: FC<Props> = ({
     if (!event) return;
 
     let value = formValue;
+
     if (reason === "selectOption") {
       if (value.get) {
         value = value.get("name") || value.get("description");
@@ -296,65 +297,64 @@ const EditableStep: FC<Props> = ({
       }
     }
 
-    const step = allReusableSteps.find(
-      (step) => (step.get ? step.get("name") : step.name) === value
-    );
-
     const newSteps = [...steps];
 
-    newSteps[stepIndex].name = value;
-    newSteps[stepIndex].isReusable = true;
-
-    if (reason === "selectOption" && step) {
-      // const parsedReusableStep = parseReusableProductionStepToObject(step)
-      const newStep =
-        parseReusableProductionStepToObject(step) || getDefaultSteps();
-      // console.log('newStep', newStep)
-      newSteps[stepIndex] = newStep;
-
-      newSteps[stepIndex].error = false;
-      newSteps[stepIndex].isEmpty = false;
-      newSteps[stepIndex].id = null;
-      // newSteps[stepIndex].parentId = step.id;
-      // newSteps[stepIndex].parentPercent = 100;
-
-      const newFormValues: Record<string, any> = { ...formValues };
-      // newFormValues.productionSteps = newSteps;
-      // newFormValues.name = value?.toUpperCase();
-
-      // console.log('newSteps[stepIndex]', newSteps[stepIndex])
-      // newSteps[stepIndex].productionSteps.forEach((step, index) => {
-      //   step.stepComponents.forEach((_, ingredientIndex) => {
-      //     computeReusableProductionStepsOnFieldChange(
-      //       newSteps[stepIndex],
-      //       index,
-      //       ingredientIndex
-      //     );
-      //   });
-      // });
-
-      // TODO: test this
-      newFormValues.sections[sectionIndex].productionSteps.forEach(
-        (step, stepIndex) => {
-          step.stepComponents.forEach((_, ingredientIndex) => {
-            computeProductionStepsRecipeOnFieldChange(
-              newFormValues,
-              sectionIndex,
-              stepIndex,
-              ingredientIndex
-            );
-          });
-        }
+    if (reason === "selectOption") {
+      const step = allReusableSteps.find(
+        (step) => (step.get ? step.get("name") : step.name) === value
       );
-
-      // console.log('newSteps[stepIndex]', newSteps[stepIndex])
-      newFormValues.sections[sectionIndex].productionSteps = newSteps;
-
-      setValues(newFormValues);
+      if (step) {
+        newSteps[stepIndex].isReusable = true;
+        // const parsedReusableStep = parseReusableProductionStepToObject(step)
+        const newStep =
+          parseReusableProductionStepToObject(step) || getDefaultSteps();
+        // console.log('newStep', newStep)
+        newSteps[stepIndex] = newStep;
+  
+        newSteps[stepIndex].error = false;
+        newSteps[stepIndex].isEmpty = false;
+        newSteps[stepIndex].id = null;
+        // newSteps[stepIndex].parentId = step.id;
+        // newSteps[stepIndex].parentPercent = 100;
+  
+        const newFormValues: Record<string, any> = { ...formValues };
+        // newFormValues.productionSteps = newSteps;
+        // newFormValues.name = value?.toUpperCase();
+  
+        // console.log('newSteps[stepIndex]', newSteps[stepIndex])
+        // newSteps[stepIndex].productionSteps.forEach((step, index) => {
+        //   step.stepComponents.forEach((_, ingredientIndex) => {
+        //     computeReusableProductionStepsOnFieldChange(
+        //       newSteps[stepIndex],
+        //       index,
+        //       ingredientIndex
+        //     );
+        //   });
+        // });
+  
+        // TODO: test this
+        newFormValues.sections[sectionIndex].productionSteps.forEach(
+          (step, stepIndex) => {
+            step.stepComponents.forEach((_, ingredientIndex) => {
+              computeProductionStepsRecipeOnFieldChange(
+                newFormValues,
+                sectionIndex,
+                stepIndex,
+                ingredientIndex
+              );
+            });
+          }
+        );
+  
+        newFormValues.sections[sectionIndex].productionSteps = newSteps;
+  
+        setValues(newFormValues);
+        onClearFocus();
+      }
     }
 
-    if (reason === "input-change" && steps) {
-      setFieldValue(`sections[${sectionIndex}].productionStep`, newSteps);
+    if (reason === "input-change") {
+      setFieldValue(`sections[${sectionIndex}].productionSteps[${stepIndex}].name`, value);
     }
 
     // if (section && !newSteps[stepIndex].parentId) {
@@ -362,9 +362,9 @@ const EditableStep: FC<Props> = ({
     //   newSteps[sectionIndex].parentPercent = 0;
     // }
 
-    if (reason === "selectOption" && step) {
-      onClearFocus();
-    }
+    // if (reason === "selectOption" && step) {
+    //   onClearFocus();
+    // }
 
     if (event.target) {
       _stopPropagation(event);
@@ -422,7 +422,8 @@ const EditableStep: FC<Props> = ({
               <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
-                  {fromRecipe && (step.isReusable || step.isEmpty) ? (
+                  {fromRecipe ? (
+                  // {fromRecipe && (step.isReusable || step.isEmpty) ? (
                     <StyledAutocomplete
                       freeSolo
                       disableClearable
