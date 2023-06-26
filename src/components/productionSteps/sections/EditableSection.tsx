@@ -13,12 +13,11 @@ import {
 } from "../../../utils/recipeUtils";
 import {
   StyledErrorMessage,
-  StyledStickyLastBodyColumn,
   StyledProductionStepTextField,
   StyledSectionFirstBodyColumn,
   StyledStepBodyCell
 } from "../StyledSectionComponents";
-import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveColumn from "../RemoveColumn";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 export const COMPONENT_NAME = "SECTIONS";
@@ -280,17 +279,11 @@ const EditableSection: FC<Props> = ({
         <StyledText>-</StyledText>
       </StyledStepBodyCell>
       {/* -------- delete icon -------- */}
-      <StyledStickyLastBodyColumn addBackground={isHover}>
-        {isHover && (
-          <IconButton
-            onClick={(e) => _removeSection(index, e)}
-            className="flexCenter"
-            disableRipple
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
-      </StyledStickyLastBodyColumn>
+      <RemoveColumn
+        type="section"
+        isHover={isHover}
+        onClick={(e) => _removeSection(index, e)}
+      />
     </Box>
   );
 };

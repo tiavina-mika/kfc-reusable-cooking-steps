@@ -28,6 +28,7 @@ import {
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { debounce } from "lodash";
+import RemoveColumn from "../RemoveColumn";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 const FormikTextField = ({ field, ...props }) => (
@@ -307,6 +308,10 @@ const EditableStepComponent = ({
       : `productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`;
   }, [fromRecipe, sectionIndex, indexComponent, indexStep]);
 
+  const _removeStepComponent = (index: number, event = null) => {
+    _stopPropagation(event);
+  };
+
   return (
     <Box
       sx={{
@@ -567,6 +572,12 @@ const EditableStepComponent = ({
       <StyledStepBodyCell align="center" width={widths[11]}>
         <StyledStepText>{"-"}</StyledStepText>
       </StyledStepBodyCell>
+      {/* -------- delete icon -------- */}
+      <RemoveColumn
+        type="stepComponent"
+        isHover={isHover}
+        onClick={(e) => _removeStepComponent(index, e)}
+      />
     </Box>
   );
 };

@@ -4,14 +4,12 @@ import {
   Autocomplete,
   Box,
   Button,
-  IconButton,
   MenuItem,
   Select,
   Stack,
   styled
 } from "@mui/material";
 import { ErrorMessage, Field, FormikErrors } from "formik";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import {
   StyledErrorMessage,
@@ -21,7 +19,6 @@ import {
   StyledStepFirstBodyColumn,
   StyledStepText,
   StyledProductionStepsTextarea,
-  StyledStickyLastBodyColumn,
   StyledAutocompleteTextField,
   StyledAutocomplete
 } from "../StyledSectionComponents";
@@ -39,6 +36,7 @@ import {
   parseReusableProductionStepToObject,
   STEP_DURATION_UNITS
 } from "../../../utils/recipeUtils";
+import RemoveColumn from "../RemoveColumn";
 
 const widths = PRODUCTION_STEPS_COL_WIDTHS;
 
@@ -310,17 +308,17 @@ const EditableStep: FC<Props> = ({
           parseReusableProductionStepToObject(step) || getDefaultSteps();
         // console.log('newStep', newStep)
         newSteps[stepIndex] = newStep;
-  
+
         newSteps[stepIndex].error = false;
         newSteps[stepIndex].isEmpty = false;
         newSteps[stepIndex].id = null;
         // newSteps[stepIndex].parentId = step.id;
         // newSteps[stepIndex].parentPercent = 100;
-  
+
         const newFormValues: Record<string, any> = { ...formValues };
         // newFormValues.productionSteps = newSteps;
         // newFormValues.name = value?.toUpperCase();
-  
+
         // console.log('newSteps[stepIndex]', newSteps[stepIndex])
         // newSteps[stepIndex].productionSteps.forEach((step, index) => {
         //   step.stepComponents.forEach((_, ingredientIndex) => {
@@ -331,7 +329,7 @@ const EditableStep: FC<Props> = ({
         //     );
         //   });
         // });
-  
+
         // TODO: test this
         newFormValues.sections[sectionIndex].productionSteps.forEach(
           (step, stepIndex) => {
@@ -345,16 +343,19 @@ const EditableStep: FC<Props> = ({
             });
           }
         );
-  
+
         newFormValues.sections[sectionIndex].productionSteps = newSteps;
-  
+
         setValues(newFormValues);
         onClearFocus();
       }
     }
 
     if (reason === "input-change") {
-      setFieldValue(`sections[${sectionIndex}].productionSteps[${stepIndex}].name`, value);
+      setFieldValue(
+        `sections[${sectionIndex}].productionSteps[${stepIndex}].name`,
+        value
+      );
     }
 
     // if (section && !newSteps[stepIndex].parentId) {
@@ -423,7 +424,7 @@ const EditableStep: FC<Props> = ({
                 <Stack direction="row" spacing={1} alignItems="center">
                   <StyledStepText>{index + 1}.</StyledStepText>
                   {fromRecipe ? (
-                  // {fromRecipe && (step.isReusable || step.isEmpty) ? (
+                    // {fromRecipe && (step.isReusable || step.isEmpty) ? (
                     <StyledAutocomplete
                       freeSolo
                       disableClearable
@@ -738,17 +739,11 @@ const EditableStep: FC<Props> = ({
         )}
       </StyledStepBodyCell>
       {/* -------- delete icon -------- */}
-      <StyledStickyLastBodyColumn type="step" addBackground={isHover}>
-        {isHover && (
-          <IconButton
-            onClick={(e) => _removeStep(index, e)}
-            className="flexCenter"
-            disableRipple
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
-      </StyledStickyLastBodyColumn>
+      <RemoveColumn
+        type="step"
+        isHover={isHover}
+        onClick={(e) => _removeStep(index, e)}
+      />
     </Box>
   );
 };

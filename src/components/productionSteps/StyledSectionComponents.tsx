@@ -107,8 +107,8 @@ export const StyledSectionFirstBodyColumn = styled((props: BoxProps) => (
   width: widths[0]
 });
 
-type StyledStickyLastBodyColumnProps = {
-  type?: "section" | "step" | "ingredients";
+export type StyledStickyLastBodyColumnProps = {
+  type?: "section" | "step" | "stepComponent";
   addBackground?: boolean;
 };
 export const StyledStickyLastBodyColumn = styled(
