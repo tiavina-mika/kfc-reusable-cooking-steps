@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useMemo, useRef } from "react";
+import React, { useState, useEffect, MouseEvent, useMemo, useRef } from "react";
 
 import { ErrorMessage, Field } from "formik";
 import {
@@ -23,7 +23,8 @@ import {
   getEmptyStepComponent,
   resetStepComponent,
   recalculateCostValues,
-  searchSupplierItemsAutocomplete
+  searchSupplierItemsAutocomplete,
+  getDefaultStepComponents
 } from "../../../utils/recipeUtils";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -138,6 +139,7 @@ type Props = {
   setFieldValue: any;
   isStepReusabe?: boolean;
   fromRecipe?: boolean;
+  computeStepComponentsFormValues?: (stepComponents: Record<string, any>, stepIndex: number) => void;
 };
 
 const EditableStepComponent = ({
@@ -154,7 +156,8 @@ const EditableStepComponent = ({
   hasError,
   handleChange,
   fromRecipe,
-  setFieldValue
+  setFieldValue,
+  computeStepComponentsFormValues,
 }: Props) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
   const [supplierItemsOptions, setSupplierItemsOptions] = useState([]);
@@ -213,6 +216,20 @@ const EditableStepComponent = ({
         `productionSteps[${indexStep}].stepComponents`,
         newStepComponents
       );
+    }
+
+    _stopPropagation(event);
+  };
+
+  const _removeStepComponent = (index: number, event: MouseEvent<HTMLButtonElement>) => {
+    const newStepComponents = [...stepComponents];
+    newStepComponents.splice(index, 1);
+    if (!newStepComponents.length) {
+      newStepComponents.splice(0, 0, getDefaultStepComponents());
+    }
+
+    if (computeStepComponentsFormValues) {
+      computeStepComponentsFormValues(newStepComponents, indexStep);
     }
 
     _stopPropagation(event);
@@ -307,10 +324,6 @@ const EditableStepComponent = ({
       ? `sections[${sectionIndex}].productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`
       : `productionSteps[${indexStep}].stepComponents[${indexComponent}].transformationMode`;
   }, [fromRecipe, sectionIndex, indexComponent, indexStep]);
-
-  const _removeStepComponent = (index: number, event = null) => {
-    _stopPropagation(event);
-  };
 
   return (
     <Box
@@ -576,7 +589,7 @@ const EditableStepComponent = ({
       <RemoveColumn
         type="stepComponent"
         isHover={isHover}
-        onClick={(e) => _removeStepComponent(index, e)}
+        onClick={(e) => _removeStepComponent(indexComponent, e)}
       />
     </Box>
   );

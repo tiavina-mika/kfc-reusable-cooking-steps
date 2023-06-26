@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback } from "react";
+import React, { FC, Fragment, useCallback, MouseEvent } from "react";
 
 import {
   Autocomplete,
@@ -141,6 +141,7 @@ type Props = {
     sectionIndex: number
   ) => void;
   computeReusableStepsFormValues?: (steps: Record<string, any>) => void;
+
   // onAddStep?: (value: any) => void;
   onClearFocus: () => void;
   isReusable?: boolean;
@@ -180,9 +181,6 @@ const EditableStep: FC<Props> = ({
   formValues,
   setValues,
   fromRecipe
-
-  // onAddStep,
-  // onDeleteBlur
 }) => {
   const _stopPropagation = (event) => event && event.stopPropagation();
 
@@ -236,7 +234,7 @@ const EditableStep: FC<Props> = ({
     _stopPropagation(event);
   };
 
-  const _removeStep = (index, event) => {
+  const _removeStep = (index: number, event: MouseEvent<HTMLButtonElement>) => {
     const newSteps = [...steps];
     newSteps.splice(index, 1);
     if (!newSteps.length) {

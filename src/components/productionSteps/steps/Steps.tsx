@@ -18,6 +18,7 @@ import StepComponentPreview from "../stepComponents/StepComponentPreview";
 import EditableStepComponent from "../stepComponents/EditableStepComponent";
 import EditablePriorStepComponent from "../stepComponents/EditablePriorStepComponent";
 import PriorStepComponentPreview from "../stepComponents/PriorStepComponentPreview";
+import { computeProductionStepsRecipeOnFieldChange } from "../../../utils/recipeUtils";
 
 export const COMPONENT_NAME = "STEPS";
 
@@ -231,6 +232,31 @@ const Steps = ({
     [hoveredRow, sectionIndex, fromRecipe]
   );
 
+  const computeStepComponentsFormValues = useCallback(
+    (stepComponents: Record<string, any>, stepIndex: number) => {
+      const newFormValues = { ...formValues };
+
+      const newSteps = [...steps];
+      if (!newSteps[stepIndex]) return;
+
+      // production steps
+      newSteps[stepIndex].stepComponents = stepComponents;
+
+      newSteps[stepIndex].stepComponents.forEach((_, stepComponentIndex) => {
+        computeProductionStepsRecipeOnFieldChange(
+          newFormValues,
+          sectionIndex,
+          stepIndex,
+          stepComponentIndex
+        );
+      });
+
+      newFormValues.sections[sectionIndex].productionSteps = newSteps;
+      setValues(newFormValues);
+    },
+    [steps, formValues, setValues, sectionIndex]
+  );
+
   const _hasError = useCallback(
     (index: number, field: string) => {
       return hasError(index, field, sectionIndex);
@@ -349,6 +375,7 @@ const Steps = ({
                               handleChange={handleChange}
                               setFieldValue={setFieldValue}
                               fromRecipe={fromRecipe}
+                              computeStepComponentsFormValues={computeStepComponentsFormValues}
                               isHover={_isStepComponentHover(
                                 index,
                                 indexComponent
