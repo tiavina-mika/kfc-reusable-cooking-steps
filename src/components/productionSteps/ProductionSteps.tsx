@@ -142,7 +142,7 @@ const ProductionSteps: FC<Props> = ({
         {!isEdition && (
           <Box
             className="flexRow justifyEnd"
-            sx={{ py: 3, pr: 4, position: "fixed", top: 60, right: 0 }}
+            sx={{ py: 3, pr: 40, position: "fixed", top: 60, right: 0 }}
           >
             <Button
               variant="contained"
