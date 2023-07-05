@@ -107,8 +107,8 @@ export const StyledSectionFirstBodyColumn = styled((props: BoxProps) => (
   width: widths[0]
 });
 
-type StyledStickyLastBodyColumnProps = {
-  type?: "section" | "step" | "ingredients";
+export type StyledStickyLastBodyColumnProps = {
+  type?: "section" | "step" | "stepComponent";
   addBackground?: boolean;
 };
 export const StyledStickyLastBodyColumn = styled(
@@ -164,13 +164,16 @@ export const StyledStepFirstBodyColumn = styled(
 
 type StyledTextProps = {
   disabled?: boolean;
+  weight?: number;
+  fontSize?: number;
 };
 export const StyledStepText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== "disabled"
-})<StyledTextProps>(({ disabled = false }) => {
+  shouldForwardProp: (prop) =>
+    prop !== "disabled" && prop !== "weight" && prop !== "fontSize"
+})<StyledTextProps>(({ disabled = false, weight = 600, fontSize = 14 }) => {
   let defaultStyles: Record<string, any> = {
-    fontWeight: 600,
-    fontSize: 14,
+    fontWeight: weight,
+    fontSize,
     lineHeight: 1.5
   };
 

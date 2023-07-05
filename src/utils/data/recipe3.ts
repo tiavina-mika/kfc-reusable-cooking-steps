@@ -538,7 +538,7 @@ export const recipe = {
       parentId: null,
       parentPercent: 0,
       createdAt: "2022-06-24T08:56:23.477Z",
-      updatedAt: "2023-06-19T12:33:52.171Z",
+      updatedAt: "2023-06-16T08:37:19.991Z",
       productionSteps: [
         {
           stepComponents: [
@@ -1302,7 +1302,7 @@ export const recipe = {
           cost: 0.0439121,
           realCost: 0.0439121,
           createdAt: "2023-03-20T20:57:37.692Z",
-          updatedAt: "2023-06-19T12:33:50.539Z",
+          updatedAt: "2023-06-16T08:37:16.196Z",
           objectId: "HdZcGCQRbM",
           __type: "Object",
           className: "ProductionStep"

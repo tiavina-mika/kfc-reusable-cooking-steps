@@ -32,7 +32,7 @@ const ReusableStepParent: FC<Props> = ({
   const _isHover = () => hoveredRow && COMPONENT_NAME === hoveredRow.component;
   return (
     <Box
-      onMouseEnter={() => onRowHover(COMPONENT_NAME)}
+      onMouseEnter={() => onRowHover?.(COMPONENT_NAME)}
       onMouseLeave={onRowBlur}
       className="flexRow"
       sx={{

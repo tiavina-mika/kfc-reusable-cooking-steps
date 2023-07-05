@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { supplierItems } from "./data/supplierItems";
 import { computeRecipeASP, roundNumber } from "./utils";
 
 const SUGGESTED_PRICE = {
@@ -226,7 +227,8 @@ export function getDefaultSteps() {
     description: "",
     ingredients: [getDefaultIngredients()],
     stepComponents: [getDefaultStepComponents()],
-    error: true
+    error: true,
+    isEmpty: true
   };
 }
 
@@ -314,9 +316,11 @@ export function parseIngredientsListToObject(
           .get("complexity");
       } else {
         const commercialName = ingredient.supplierItem.commercialName;
-        complexity = commercialName.get
-          ? commercialName.get("complexity")
-          : commercialName.complexity;
+        if (commercialName) {
+          complexity = commercialName.get
+            ? commercialName.get("complexity")
+            : commercialName.complexity;
+        }
       }
     }
 
@@ -382,14 +386,8 @@ export const parseProductionStepToObject = (step, percent = false) => {
     machineType: step.machineType || null,
     machineSetting: step.machineSetting || "",
     stepDuration: step.stepDuration || 0,
-    stepDurationUnit: step.stepDurationUnit || "",
+    stepDurationUnit: step.stepDurationUnit || ""
   };
-};
-
-export const parseProductionStepsToObject = (steps, percent = false) => {
-  return steps.map((step) => {
-    return parseProductionStepToObject(step, percent)
-  });
 };
 
 export const parseReusableProductionStepToObject = (step, percent = false) => ({
@@ -399,15 +397,28 @@ export const parseReusableProductionStepToObject = (step, percent = false) => ({
   isReusable: true,
   error: step.description && step.description !== "" ? false : true,
   productionSteps: step.productionSteps
-    ? parseProductionStepsToObject(step.productionSteps, percent)
-    : [],
+    ? /* eslint-disable-next-line */
+      parseProductionStepsToObject(step.productionSteps, percent)
+    : []
   // grossWeight:
   //   false !== percent
   //     ? step.grossWeight || 0
   //     : ((step.grossWeight || 0) * (percent as any)) / 100,
 });
 
-export const parseReusableProductionStepsToObject = (steps, percent = false) => {
+export const parseProductionStepsToObject = (steps, percent = false) => {
+  return steps.map((step) => {
+    if (step.className === "ReusableProductionStep") {
+      return parseReusableProductionStepToObject(step, percent);
+    }
+    return parseProductionStepToObject(step, percent);
+  });
+};
+
+export const parseReusableProductionStepsToObject = (
+  steps,
+  percent = false
+) => {
   return steps.map((step) => {
     return parseReusableProductionStepToObject(step, percent);
   });
@@ -605,26 +616,28 @@ function computeDisplayData(
 ) {
   for (const section of recipe.sections) {
     for (const step of section[stepsField]) {
-      for (const ingredient of step[stepIngredientField]) {
-        const computedIngredientData = computeIngredientData(ingredient);
-        ingredient.netWeight = computedIngredientData.netWeight;
-        ingredient.cost = computedIngredientData.cost;
-        ingredient.realCost = (computedIngredientData as any).realCost;
-        ingredient.transformRate = (computedIngredientData as any).transformRate;
-        ingredient.cookingModeLabel = (computedIngredientData as any).cookingModeLabel;
+      if (!step.isReusable) {
+        for (const ingredient of step[stepIngredientField]) {
+          const computedIngredientData = computeIngredientData(ingredient);
+          ingredient.netWeight = computedIngredientData.netWeight;
+          ingredient.cost = computedIngredientData.cost;
+          ingredient.realCost = (computedIngredientData as any).realCost;
+          ingredient.transformRate = (computedIngredientData as any).transformRate;
+          ingredient.cookingModeLabel = (computedIngredientData as any).cookingModeLabel;
 
-        const currentCookingMode =
-          ingredient.supplierItem &&
-          ingredient.supplierItem.cookingModes.find(
-            (cookingMode) =>
-              cookingMode.cookingMode.id === ingredient.cookingMode
-          );
-        ingredient.transformRate = currentCookingMode
-          ? parseFloat(currentCookingMode.transformRate)
-          : 0;
+          const currentCookingMode =
+            ingredient.supplierItem &&
+            ingredient.supplierItem.cookingModes.find(
+              (cookingMode) =>
+                cookingMode.cookingMode.id === ingredient.cookingMode
+            );
+          ingredient.transformRate = currentCookingMode
+            ? parseFloat(currentCookingMode.transformRate)
+            : 0;
+        }
+
+        computeStepData(step, stepIngredientField);
       }
-
-      computeStepData(step, stepIngredientField);
     }
 
     computeSectionData(section, stepsField);
@@ -677,7 +690,7 @@ export const getReusableFormInitialValues = (step: Record<string, any>) => {
   const productionSteps = step
     ? parseProductionStepsToObject(step.productionSteps)
     : [getDefaultSteps()];
-  
+
   const values: Record<string, any> = {
     productionSteps,
     name: step ? step.name : ""
@@ -769,6 +782,75 @@ export const computeProductionStepsRecipeOnFieldChange = (
           stepComponent.transformRate = transformRate;
           stepComponent.cookingModeLabel = cookingModeLabel;
         }
+
+        // TODO: test this
+        if (step.isReusable && step.productionSteps) {
+          step.productionSteps.forEach((subStep) => {
+            subStep.stepComponents.forEach((subStepComponent) => {
+              const {
+                cost,
+                realCost,
+                grossWeight,
+                netWeight,
+                transformRate,
+                cookingModeLabel
+              }: Record<string, any> = computeIngredientData(subStepComponent);
+              stepComponent.grossWeight = grossWeight;
+              stepComponent.netWeight = netWeight;
+              stepComponent.cost = cost;
+              stepComponent.realCost = realCost;
+              stepComponent.transformRate = transformRate;
+              stepComponent.cookingModeLabel = cookingModeLabel;
+            });
+
+            computeStepData(subStep, "stepComponents");
+          });
+        }
+      }
+
+      computeStepData(step, "stepComponents");
+    }
+
+    computeSectionData(section, "productionSteps");
+  }
+
+  computeRecipeData(recipe);
+};
+
+export const computeProductionStepsRecipeOnFieldChange2 = (
+  recipe,
+  sectionIndex = null,
+  stepIndex = null,
+  stepComponentIndex = null,
+  subStepIndex = null,
+  subStepComponentIndex = null
+) => {
+  if (sectionIndex !== null) {
+    // to avoid 0
+    const section = recipe.sections[sectionIndex];
+
+    if (stepIndex !== null) {
+      const step = section.productionSteps[stepIndex];
+
+      if (stepComponentIndex !== null) {
+        const stepComponent = step.stepComponents[stepComponentIndex];
+
+        if (stepComponent) {
+          const {
+            cost,
+            realCost,
+            grossWeight,
+            netWeight,
+            transformRate,
+            cookingModeLabel
+          }: Record<string, any> = computeIngredientData(stepComponent);
+          stepComponent.grossWeight = grossWeight;
+          stepComponent.netWeight = netWeight;
+          stepComponent.cost = cost;
+          stepComponent.realCost = realCost;
+          stepComponent.transformRate = transformRate;
+          stepComponent.cookingModeLabel = cookingModeLabel;
+        }
       }
 
       computeStepData(step, "stepComponents");
@@ -786,7 +868,7 @@ export const computeReusableProductionStepsOnFieldChange = (
   stepComponentIndex = null
 ) => {
   if (stepIndex !== null) {
-    const step = reusableStep.productionSteps[stepIndex];
+    const step = reusableStep.productionSteps?.[stepIndex];
 
     if (stepComponentIndex !== null) {
       const stepComponent = step.stepComponents[stepComponentIndex];
@@ -811,4 +893,57 @@ export const computeReusableProductionStepsOnFieldChange = (
 
     computeStepData(step, "stepComponents");
   }
+};
+
+export const recalculateCostValues = (stepComponent: Record<string, any>) => {
+  stepComponent.grossWeight =
+    stepComponent.netWeight /
+    ((stepComponent.transformRate ? stepComponent.transformRate : 100) / 100) /
+    1000;
+  stepComponent.realCost = roundNumber(
+    stepComponent.grossWeight * stepComponent.supplierItem.pricePerKg,
+    3
+  );
+
+  return stepComponent;
+};
+
+export function getEmptyStepComponent() {
+  return {
+    complexity: null,
+    cookingMode: null,
+    cookingModeLabel: null,
+    cost: null,
+    error: false,
+    grossWeight: null,
+    index: 0,
+    netWeight: null,
+    realCost: null,
+    supplierItem: null,
+    transformRate: null,
+    transformationMode: null,
+    emptyComponent: true
+  };
+}
+
+export function resetStepComponent(stepComponent) {
+  stepComponent.grossWeight = 0;
+  stepComponent.cookingMode = null;
+  stepComponent.cookingModeLabel = null;
+  stepComponent.cost = null;
+  stepComponent.netWeight = null;
+  stepComponent.realCost = null;
+  stepComponent.supplierItem = null;
+  stepComponent.priorSteps = null;
+  stepComponent.transformRate = 100;
+  stepComponent.transformationMode = null;
+
+  return stepComponent;
+}
+
+export const searchSupplierItemsAutocomplete = (search: string) => {
+  const newSupplierItems = supplierItems.filter((supplierItem) =>
+    supplierItem.name.includes(search)
+  );
+  return newSupplierItems;
 };

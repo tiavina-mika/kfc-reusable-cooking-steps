@@ -38,7 +38,6 @@ const EditableReusableSteps: FC<Props> = ({
   kitchenAreas,
   machineTypes
 }) => {
-  useEffect(() => {}, []);
   const computeReusableStepsFormValues = useCallback(
     (steps: Record<string, any>) => {
       const newFormValues = { ...formValues };
@@ -80,6 +79,7 @@ const EditableReusableSteps: FC<Props> = ({
       hasError={_hasError}
       computeReusableStepsFormValues={computeReusableStepsFormValues}
       isReusable
+      fromRecipe={false}
       // onKeyDown={(e) => _onKeyDown(e, section)}
     />
   );
